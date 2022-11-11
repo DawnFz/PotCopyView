@@ -16,14 +16,7 @@
   </div>
 </template>
 
-<script>
-
-export default {
-  name: 'AboutView',
-  setup () {
-    return {}
-  }
-}
+<script lang="ts">
 </script>
 
 <style lang="scss">

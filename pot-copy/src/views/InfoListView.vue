@@ -5,8 +5,7 @@
           v-model="inputText"
           placeholder="输入查找的内容喵~"
           class="input-with-select"
-          style="height: 45px;"
-      >
+          style="height: 45px;">
         <template #prepend>
           <el-select v-model="searchType" placeholder="搜索类型" style="width: 125px">
             <el-option label="全部" value="-1"/>
@@ -20,11 +19,12 @@
 
     </div>
     <div class="copy-list">
-      <div class="copy-card" v-for="item in meta.data.content" :key="item">
+      <div class="copy-card" v-for="item in meta.data.content"
+           :key="item" @click="toCopyInfo(item.copyId)">
         <img class="card-top" :src="item.images[0]" alt="{{item.copyName}}"
              ondragstart="return false;"/>
         <div class="card-bottom">
-          <span class="card-title" @click="toInfo(item)">{{ item.copyName }}</span>
+          <span class="card-title">{{ item.copyName }}</span>
           <div class="card-type-parent">
             <div class="card-type">{{ item.potType }}
             </div>
@@ -54,76 +54,49 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
 import {reactive, ref} from 'vue'
-import {errorMessage} from "../elehelper/message.js";
-import {getCopyInfos, getPotTypes} from "../webapi/api.js";
+import {getCopyInfos, getPotTypes} from "../webapi/api";
 import {Search} from '@element-plus/icons-vue';
 import router from "../router";
 
-export default {
-  name: 'InfoListView',
-  async setup() {
-    const searchType = ref()
-    const inputText = ref()
-    const toInfo = (item) => {
-      router.push({
-        path: 'info',
-        query:{ item : JSON.stringify(item) }
-      })
-    }
-    const meta = reactive({
-      data: {},
-      types: [],
-      params: {
-        pageNum: 1,
-        pageSize: 12,
-        total: 0
-      }
-    })
+const searchType = ref()
+const inputText = ref()
 
-    const searchLoad = async () => {
-      if (searchType.value !== "-1") {
-        meta.params.typeId = searchType;
-      } else {
-        meta.params.typeId = null
-      }
-      meta.params.copyName = inputText.value;
-      await loadPage(1)
-    }
-
-    const loadPage = async (val) => {
-      meta.page = val
-      await getCopyInfos(meta.params).then(res => {
-        if (res.status === 'error') {
-          errorMessage(res)
-        } else {
-          meta.data = res.data
-        }
-      }).catch(err => {
-        errorMessage(err)
-      })
-    }
-
-    await getPotTypes().then(res => {
-      meta.types = res.data
-    }).catch(err => {
-      errorMessage(err)
-    })
-
-    await loadPage()
-
-    return {
-      searchType,
-      inputText,
-      meta,
-      loadPage,
-      searchLoad,
-      Search,
-      toInfo
-    }
+const meta: any = reactive({
+  data: {},
+  types: [],
+  params: {
+    pageNum: 1,
+    pageSize: 12,
+    total: 0
   }
+})
+
+const searchLoad = async () => {
+  if (searchType.value !== "-1") {
+    meta.params.typeId = searchType;
+  } else {
+    meta.params.typeId = null
+  }
+  meta.params.copyName = inputText.value;
+  await loadPage(1)
 }
+
+const loadPage = async (val: number) => {
+  meta.page = val
+  meta.data = await getCopyInfos(meta.params)
+}
+
+let toCopyInfo = (copyId: string) => {
+  router.push({
+    path: 'info',
+    query: {copyId: copyId}
+  })
+}
+
+meta.types = await getPotTypes()
+await loadPage(1)
 </script>
 
 <style lang="scss">
@@ -144,7 +117,6 @@ export default {
     .el-input {
       height: 45px;
     }
-
 
   }
 
@@ -257,7 +229,7 @@ export default {
 }
 
 /* pad */
-@media screen and (min-width: 768px) and (max-width: 991px) {
+@media screen and (min-width: 767px) and (max-width: 992px) {
   .copy-search {
     transition: 0.5s;
     width: 70%;

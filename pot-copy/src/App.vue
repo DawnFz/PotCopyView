@@ -29,18 +29,14 @@
   </suspense>
 </template>
 
-<script>
+<script lang="ts" setup>
 import {onMounted} from "vue";
 
-export default {
-  setup(){
-    onMounted(() => {
-      document.body.style.setProperty('--el-color-primary', '#42b983');
-      document.body.style.setProperty('--el-color-primary-light-9', '#d4ffeb');
-      document.body.style.setProperty('--el-color-primary-light-3', '#47de99');
-    })
-  }
-}
+onMounted(() => {
+  document.body.style.setProperty('--el-color-primary', '#42b983');
+  document.body.style.setProperty('--el-color-primary-light-9', '#d4ffeb');
+  document.body.style.setProperty('--el-color-primary-light-3', '#47de99');
+})
 </script>
 
 <style lang="scss">
@@ -121,9 +117,15 @@ export default {
   }
 }
 
-@media screen and (min-width: 992px) {
+@media screen and (min-width: 1015px) {
   .header {
     width: 80%;
+  }
+}
+
+@media screen and (min-width: 767px) and (max-width: 1015px) {
+  .right-box {
+    display: none;
   }
 }
 

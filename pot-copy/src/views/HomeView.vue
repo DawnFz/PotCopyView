@@ -3,35 +3,18 @@
     <div class="title-level-one">欢迎使用 PotCopy</div>
     <div class="title-level-two">这是一个尘歌壶摹本分享站</div>
     <div class="body-box">
-      <div class="btn-go-list" @click="toInfoList()">摹本中心</div>
-      <div class="btn-go-share" @click="toShare()">分享摹本</div>
+      <div class="btn-go-list" @click="toPage({path: 'info-list'})">摹本中心</div>
+      <div class="btn-go-share" @click="toPage({path: 'home'})">分享摹本</div>
       <div class="btn-go-about">正在开发</div>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
+import router from "../router";
 
-
-import router from "../router/index.js";
-
-export default {
-  name: 'HomeView',
-  setup () {
-    const toInfoList = () => {
-      router.push({
-        path: 'info-list'
-      })
-    }
-
-    const toShare = () => {
-    }
-
-    return {
-      toShare,
-      toInfoList
-    }
-  }
+const toPage = (param: object) => {
+  router.push(param)
 }
 </script>
 
