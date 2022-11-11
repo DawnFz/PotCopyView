@@ -2,6 +2,7 @@ import {createRouter, createWebHashHistory, createWebHistory} from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
 import InfoListView from '../views/InfoListView'
+import InfoView from '../views/InfoView'
 
 const routes = [
   {
@@ -27,12 +28,24 @@ const routes = [
       title: 'PotCopy 展示'
     },
     component: InfoListView
+  },
+  {
+    path: '/info',
+    name: 'info',
+    meta: {
+      title: 'PotCopy 详情'
+    },
+    component: InfoView
   }
 ]
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
-  routes
+  routes,
+  // 每次切换路由页面滚动到顶部
+  scrollBehavior () {
+    return { top: 0 }
+  }
 })
 
 export default router

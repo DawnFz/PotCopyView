@@ -24,7 +24,7 @@
         <img class="card-top" :src="item.images[0]" alt="{{item.copyName}}"
              ondragstart="return false;"/>
         <div class="card-bottom">
-          <span class="card-title">{{ item.copyName }}</span>
+          <span class="card-title" @click="toInfo(item)">{{ item.copyName }}</span>
           <div class="card-type-parent">
             <div class="card-type">{{ item.potType }}
             </div>
@@ -59,13 +59,19 @@ import {reactive, ref} from 'vue'
 import {errorMessage} from "../elehelper/message.js";
 import {getCopyInfos, getPotTypes} from "../webapi/api.js";
 import {Search} from '@element-plus/icons-vue';
+import router from "../router";
 
 export default {
   name: 'InfoListView',
   async setup() {
     const searchType = ref()
     const inputText = ref()
-
+    const toInfo = (item) => {
+      router.push({
+        path: 'info',
+        query:{ item : JSON.stringify(item) }
+      })
+    }
     const meta = reactive({
       data: {},
       types: [],
@@ -113,7 +119,8 @@ export default {
       meta,
       loadPage,
       searchLoad,
-      Search
+      Search,
+      toInfo
     }
   }
 }
