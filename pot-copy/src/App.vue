@@ -9,7 +9,7 @@
             <span><router-link to="/about">关于 PotCopy</router-link></span>
           </div>
           <div class="right-box">
-            <div class="share-btn">分享我的摹本</div>
+            <div class="share-btn"><router-link to="/share">分享我的摹本</router-link></div>
           </div>
         </div>
       </div>
@@ -102,6 +102,11 @@ onMounted(() => {
         -webkit-user-select: none;
         background-color: #42b983;
         transition: 0.3s;
+        a {
+          text-decoration: none;
+          color: white;
+          outline: none;
+        }
       }
 
       .share-btn:hover {
