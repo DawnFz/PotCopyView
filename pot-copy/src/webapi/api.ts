@@ -1,5 +1,5 @@
 import $http from './index'
-import {errorMessage} from "../elehelper/message";
+import {successMessage,errorMessage} from "../elehelper/message";
 
 // 获取摹本列表
 export const getCopyInfos = (data: any) => {
@@ -44,6 +44,27 @@ export const getPotTypes = () => {
         url: 'Params/types'
     }).then(res => {
         return res.data
+    }).catch(err => {
+        errorMessage(err)
+    })
+}
+
+
+// 分享我的摹本
+export const addCopyInfo = (data) => {
+    return $http({
+        method: 'post',
+        url: '/CopyInfo/addCopyInfo',
+        data: data
+    }).then(res => {
+        console.log(res)
+        let message: string = res.status.toString()
+        if (message === 'error') {
+            errorMessage(res)
+        } else {
+            successMessage(res)
+            // return res.data
+        }
     }).catch(err => {
         errorMessage(err)
     })

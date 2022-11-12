@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 const $http = axios.create({
-    // baseURL: 'http://share.snapgenshin.com/PotCopy/api'
-    baseURL: 'http://localhost:8085/PotCopy/api'
+    baseURL: 'http://share.snapgenshin.com/PotCopy/api'
+    // baseURL: 'http://localhost:8080/'
 })
 
 // 请求拦截器
