@@ -1,5 +1,6 @@
 import $http from './index'
 import {successMessage, errorMessage} from "../elehelper/message";
+import router from "../router";
 
 // 获取摹本列表
 export const getCopyInfos = (data: any) => {
@@ -85,7 +86,7 @@ export const addCopyInfo = (data: object) => {
     return $http({
         method: 'post',
         url: '/Info/shareCopyInfo',
-        data: data
+        params: data
     }).then(res => {
         console.log(res)
         let message: string = res.status.toString()
@@ -93,6 +94,11 @@ export const addCopyInfo = (data: object) => {
             errorMessage(res)
         } else {
             successMessage(res)
+            router.push({
+                path: 'infos',
+            }).then(r => {
+                console.log(r)
+            })
         }
     }).catch(err => {
         errorMessage(err)

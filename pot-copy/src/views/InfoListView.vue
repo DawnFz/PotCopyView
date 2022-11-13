@@ -7,13 +7,13 @@
           class="input-with-select"
           style="height: 45px;">
         <template #prepend>
-          <el-select v-model="searchType" placeholder="搜索类型" style="width: 125px">
+          <el-select v-model="searchType" placeholder="类型" style="width: 90px">
             <el-option label="全部" value="-1"/>
             <el-option v-for="type in meta.types" :key="type" :label="type.typeName" :value="type.id"/>
           </el-select>
         </template>
         <template #append>
-          <el-button style="width: 70px" :icon="Search" @click="searchLoad"/>
+          <el-button style="width: 50px" :icon="Search" @click="searchLoad"/>
         </template>
       </el-input>
 
@@ -89,10 +89,12 @@ const loadPage = async (val: number) => {
 }
 
 let toCopyInfo = (copyId: string) => {
-  router.push({
-    path: 'info',
-    query: {copyId: copyId}
-  })
+  setTimeout(() => {
+    router.push({
+      path: 'info',
+      query: {copyId: copyId}
+    })
+  }, 500);
 }
 
 meta.types = await getPotTypes()
@@ -127,7 +129,6 @@ await loadPage(1)
 
     .copy-card {
       transition: 0.6s;
-      margin: 25px 0;
       display: inline-block;
       height: 400px;
       width: 300px;
@@ -207,6 +208,11 @@ await loadPage(1)
       transform: scale(1.05);
       box-shadow: 0 1px 15px 3px rgba(0, 0, 0, 0.35);
     }
+
+    .copy-card:active {
+      transition: 0.2s;
+      background-color: #ccc;
+    }
   }
 
 }
@@ -226,6 +232,9 @@ await loadPage(1)
     transition: 0.5s;
     width: 100%;
   }
+  .copy-card {
+    margin: 25px 0;
+  }
 }
 
 /* pad */
@@ -234,6 +243,9 @@ await loadPage(1)
     transition: 0.5s;
     width: 70%;
   }
+  .copy-card {
+    margin: 25px 10px;
+  }
 }
 
 /* pc */
@@ -241,6 +253,9 @@ await loadPage(1)
   .copy-search {
     transition: 0.5s;
     width: 50%;
+  }
+  .copy-card {
+    margin: 25px 15px;
   }
 }
 

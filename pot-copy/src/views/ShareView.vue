@@ -3,54 +3,59 @@
     <div class="share-form">
       <el-form ref="shareForm" :model="form.data" :rules="rules" label-position="top">
         <el-form-item label="摹本编号" prop="copyId">
-          <el-input class="share-label" v-model="form.data.copyId" placeholder="在这里输入摹本编号喵~" clearable/>
+          <el-input class="share-label"
+                    v-model="form.data.copyId" placeholder="在这里输入摹本编号喵~" clearable/>
         </el-form-item>
         <el-form-item label="摹本名称" prop="copyName">
           <el-input class="share-label" v-model="form.data.copyName" placeholder="在这里输入摹本名称喵~" clearable/>
         </el-form-item>
-        <el-form-item class="share-select" label="洞天类型" prop="potType">
-          <el-select class="share-label share-width" v-model="form.data.potType" placeholder="在这里选择洞天类型喵~" clearable>
-            <el-option v-for="potType in meta.potTypes"
-                       :key="potType.id"
-                       :label="potType.typeName"
-                       :value="potType.id"
-                       @click="getBlocksByType(potType.id)">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item class="share-select share-select-short" label="所在区域" prop="blockId">
-          <el-select class="share-label share-width" v-model="form.data.blockId" placeholder="在这里选择所在区域喵~"
-                     clearable>
-            <el-option v-for="block in meta.blocks"
-                       :key="block.blockId"
-                       :label="block.blockName"
-                       :value="block.blockId">
-            </el-option>
-          </el-select>
-        </el-form-item>
+        <el-row>
+          <el-col class="el-col-sm-11">
+            <el-form-item class="share-select" label="洞天类型" prop="potType">
+              <el-select class="share-label share-width" v-model="form.data.potType" placeholder="在这里选择洞天类型喵~"
+                         clearable>
+                <el-option v-for="potType in meta.potTypes"
+                           :key="potType.id"
+                           :label="potType.typeName"
+                           :value="potType.id"
+                           @click="getBlocksByType(potType.id)">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col class="el-col-sm-12 el-col-sm-offset-1">
+            <el-form-item class="share-select share-select-short" label="所在区域" prop="blockId">
+              <el-select class="share-label share-width" v-model="form.data.blockId" placeholder="在这里选择所在区域喵~"
+                         clearable>
+                <el-option v-for="block in meta.blocks"
+                           :key="block.blockId"
+                           :label="block.blockName"
+                           :value="block.blockId">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="上传者UID" prop="uploadUid">
           <el-input class="share-label" v-model="form.data.uploadUid" placeholder="在这里输入上传者UID喵~" clearable/>
         </el-form-item>
         <!--        多个标签-->
-        <el-form-item label="标签" class="is-required">
-          <div v-for="(item,index) in form.data.tagIds" class="share-div">
-            <el-form-item class="share-select" :rules="rules.tagIds" :prop="`tagIds.${index}`">
-              <el-select v-model="form.data.tagIds[index]" placeholder="在这里选择标签喵~">
-                <el-option v-for="tag in meta.tags"
-                           :key="tag.id"
-                           :label="tag.tagName"
-                           :value="tag.id">
-                </el-option>
-              </el-select>
-              <!--              <el-input v-model="form.data.tagIds[index]" clearable />-->
+            <el-form-item label="标签" class="is-required" prop="tagIds">
+              <div style="display: block;margin-bottom:15px;width: 100%" class="share-select">
+                <el-select style="width: 100%" v-model="form.data.tagIds"  multiple placeholder="请选择标签">
+                  <el-option
+                      v-for="tag in meta.tags"
+                      :key="tag.id"
+                      :label="tag.tagName"
+                      :value="tag.id"
+                  />
+                </el-select>
+              </div>
             </el-form-item>
-            <el-button class="share-button" v-if="index === 0" :icon="Plus" @click="addTagRow" circle/>
-            <el-button class="share-button" v-if="index > 0" style="color: #f66" :icon="Minus"
-                       @click="deleteTagRow(index)" circle/>
-          </div>
-        </el-form-item>
         <!--        多个链接-->
         <el-form-item label="图片链接" class="is-required">
+          <span style="margin: 0 15px;color: #aaa">因服务器压力原因，图片采用外链形式上传</span>
+          <span><a href="https://www.superbed.cn/" target="_blank">点我去图床</a></span>
           <div v-for="(item,index) in form.data.imageUrls" class="share-div">
             <el-form-item class="share-label-short" :rules="rules.imageUrls" :prop="`imageUrls.${index}`">
               <el-input v-model="form.data.imageUrls[index]" placeholder="在这里输入图片链接喵~" clearable/>
@@ -77,14 +82,13 @@
 <script lang="ts" setup>
 import {addCopyInfo, getBlocks, getPotTypes, getTags} from "../webapi/api";
 import {reactive, ref} from "vue";
-import {errorMessage} from "../elehelper/message";
 import {Plus, Minus} from '@element-plus/icons-vue'
-import {FormInstance, FormRules, ElMessage, ElMessageBox} from "element-plus";
+import {FormInstance, FormRules} from "element-plus";
 
 const shareForm = ref<FormInstance>()
 const form = reactive({
   data: {
-    tagIds: [''],
+    tagIds: [],
     imageUrls: ['']
   }
 })
@@ -97,47 +101,42 @@ meta.potTypes = await getPotTypes()
 meta.tags = await getTags()
 
 
-
-const getBlocksByType =async (typeId: number) => {
+const getBlocksByType = async (typeId: number) => {
   meta.blocks = await getBlocks(typeId)
 }
 
 const rules = reactive<FormRules>({
   copyId: [
-    {required: true, message: '请输入摹本编号~喵！', trigger: 'blur'},
+    {required: true, message: '请输入正确的摹本编号！', trigger: 'blur', pattern: /^[0-9]*$/},
   ],
   copyName: [
-    {required: true, message: '请输入摹本名称~喵！', trigger: 'blur'},
+    {required: true, message: '请输入摹本名称~  喵！', trigger: 'blur'},
   ],
   potType: [
-    {required: true, message: '请选择洞天类型~喵！', trigger: 'blur'},
+    {required: true, message: '请选择洞天类型~  喵！', trigger: 'blur', pattern: /^[0-9]*$/},
   ],
   blockId: [
-    {required: true, message: '请选择所在区域~喵！', trigger: 'blur'},
+    {required: true, message: '请选择所在区域~  喵！', trigger: 'blur', pattern: /^[0-9]*$/},
   ],
   uploadUid: [
-    {required: true, message: '请输入上传者uid~喵！', trigger: 'blur'},
+    {required: true, message: '请输入正确的上传者uid格式！', trigger: 'blur', pattern: /^[0-9]*$/},
   ],
   tagIds: [
-    {required: true, message: '请选择标签~喵！', trigger: 'blur'},
+    {required: true, message: '请选择标签~  喵！', trigger: 'blur'},
   ],
   imageUrls: [
-    {required: true, message: '请输入图片链接~喵！', trigger: 'blur'},
+    {required: true, message: '请输入图片链接~  喵！', trigger: 'blur'},
   ],
   description: [
-    {required: true, message: '请输入摹本详情~喵！', trigger: 'blur'},
+    {required: true, message: '请输入摹本详情~  喵！', trigger: 'blur'},
   ]
 })
 
 const upload = async (sharingForm: FormInstance | undefined) => {
   if (!sharingForm) return
-  await sharingForm.validate((valid, fields) => {
+  await sharingForm.validate(async (valid: boolean) => {
     if (valid) {
-      let params = form.data
-      addCopyInfo(params)
-      console.log(params);
-    } else {
-      console.log('error submit!', fields)
+      await addCopyInfo(form.data)
     }
   })
 }
@@ -147,12 +146,6 @@ const clear = async (sharingForm: FormInstance | undefined) => {
   sharingForm.resetFields()
 }
 
-const addTagRow = () => {
-  form.data.tagIds.push('')
-}
-const deleteTagRow = (index: number) => {
-  form.data.tagIds.splice(index, 1)
-}
 const addImgRow = () => {
   form.data.imageUrls.push('')
 }
@@ -202,7 +195,7 @@ const deleteImgRow = (index: number) => {
       }
 
       .share-button {
-        margin-left: 15px;
+        margin-left: 17px;
         display: inline-block;
       }
     }

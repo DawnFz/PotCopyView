@@ -3,9 +3,9 @@
     <div class="title-level-one">欢迎使用 PotCopy</div>
     <div class="title-level-two">这是一个尘歌壶摹本分享站</div>
     <div class="body-box">
-      <div class="btn-go-list" @click="toPage({path: 'info-list'})">摹本中心</div>
-      <div class="btn-go-share" @click="toPage({path: 'home'})">分享摹本</div>
-      <div class="btn-go-about">正在开发</div>
+      <div class="btn-go-list" @click="toPage('info-list')">摹本中心</div>
+      <div class="btn-go-share" @click="toPage('home')">分享摹本</div>
+      <div class="btn-go-about" @click="toPage('about')">联系我们</div>
     </div>
   </div>
 </template>
@@ -13,8 +13,11 @@
 <script lang="ts" setup>
 import router from "../router";
 
-const toPage = (param: object) => {
-  router.push(param)
+
+const toPage = (param: string) => {
+  setTimeout(() => {
+    router.push(param)
+  }, 500)
 }
 </script>
 

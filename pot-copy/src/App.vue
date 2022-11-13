@@ -9,9 +9,7 @@
             <span><router-link to="/about">关于 PotCopy</router-link></span>
           </div>
           <div class="right-box">
-            <div class="share-btn">
-              <router-link to="/share">分享我的摹本</router-link>
-            </div>
+            <div class="share-btn" @click="toShare">分享我的摹本</div>
           </div>
         </div>
       </div>
@@ -36,7 +34,7 @@
 
 <script lang="ts" setup>
 import {onMounted} from "vue";
-// import {useRoute} from "vue-router";
+import router from "./router";
 
 onMounted(() => {
   document.body.style.setProperty('--el-color-primary', '#42b983');
@@ -44,17 +42,11 @@ onMounted(() => {
   document.body.style.setProperty('--el-color-primary-light-3', '#47de99');
 })
 
-// let transitionName = ref();
-// const route = useRoute()
-// watch(route, (to: any, from: any) => {
-//       console.log(transitionName.value);
-//       if (to.meta.index > from.meta.index) {
-//         transitionName.value = "slide-left";
-//       } else {
-//         transitionName.value = "slide-right";
-//       }
-//     }
-// )
+const toShare = () => {
+  setTimeout(() => {
+    router.push("share")
+  }, 500)
+}
 
 </script>
 
@@ -142,13 +134,13 @@ onMounted(() => {
   }
 }
 
-@media screen and (min-width: 1015px) {
+@media screen and (min-width: 1016px) {
   .header {
     width: 80%;
   }
 }
 
-@media screen and (min-width: 767px) and (max-width: 1015px) {
+@media screen and (min-width: 767px) and (max-width: 1016px) {
   .right-box {
     display: none;
   }
