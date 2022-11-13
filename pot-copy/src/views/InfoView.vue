@@ -13,6 +13,7 @@
       <div class="info-copy-tips">tips: 点击上方摹本代码复制</div>
       <div class="info-card">
         <div class="info-card-type">{{ meta.data.potType }}</div>
+        <div class="info-card-type" style="background-color: #46a0ff">{{ meta.data.blockName }}</div>
         <div class="info-card-tags" v-for="tag in meta.data.tags" :key="tag">{{ tag }}</div>
       </div>
       <div>
@@ -138,13 +139,16 @@ const copy = async (msg: string) => {
       color: white;
       transition: 0.5s;
     }
-    .info-copy-id:hover{
+
+    .info-copy-id:hover {
       background-color: #28ded6;
     }
-    .info-copy-id:active{
+
+    .info-copy-id:active {
       background-color: #1f9d97;
     }
-    .info-copy-id:visited{
+
+    .info-copy-id:visited {
       background-color: #22b9b2;
     }
 

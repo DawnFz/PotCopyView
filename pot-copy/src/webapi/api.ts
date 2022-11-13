@@ -1,5 +1,5 @@
 import $http from './index'
-import {successMessage,errorMessage} from "../elehelper/message";
+import {successMessage, errorMessage} from "../elehelper/message";
 
 // 获取摹本列表
 export const getCopyInfos = (data: any) => {
@@ -49,12 +49,42 @@ export const getPotTypes = () => {
     })
 }
 
+// 获取洞天区域
+export const getBlocks = (typeId: number) => {
+    return $http({
+        method: 'get',
+        url: 'Params/blocks',
+        params: {
+            typeId: typeId
+        }
+    }).then(res => {
+        return res.data
+    }).catch(err => {
+        errorMessage(err)
+    })
+}
+
+
+// 获取标签
+export const getTags = () => {
+    return $http({
+        method: 'get',
+        url: 'Params/tags',
+        params: {
+            pageNum: 1
+        }
+    }).then(res => {
+        return res.data.content
+    }).catch(err => {
+        errorMessage(err)
+    })
+}
 
 // 分享我的摹本
-export const addCopyInfo = (data) => {
+export const addCopyInfo = (data: object) => {
     return $http({
         method: 'post',
-        url: '/CopyInfo/addCopyInfo',
+        url: '/Info/shareCopyInfo',
         data: data
     }).then(res => {
         console.log(res)
@@ -63,7 +93,6 @@ export const addCopyInfo = (data) => {
             errorMessage(res)
         } else {
             successMessage(res)
-            // return res.data
         }
     }).catch(err => {
         errorMessage(err)

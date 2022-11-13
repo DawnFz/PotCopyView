@@ -9,7 +9,9 @@
             <span><router-link to="/about">关于 PotCopy</router-link></span>
           </div>
           <div class="right-box">
-            <div class="share-btn"><router-link to="/share">分享我的摹本</router-link></div>
+            <div class="share-btn">
+              <router-link to="/share">分享我的摹本</router-link>
+            </div>
           </div>
         </div>
       </div>
@@ -19,7 +21,10 @@
                   color: #42b983;">Top
       </el-backtop>
       <div style="height: 80px"></div>
+
       <router-view/>
+
+
       <!--页脚-->
       <div class="footer">
         <div>© 2022 PotCopy.Api All Rights Reserved</div>
@@ -31,12 +36,26 @@
 
 <script lang="ts" setup>
 import {onMounted} from "vue";
+// import {useRoute} from "vue-router";
 
 onMounted(() => {
   document.body.style.setProperty('--el-color-primary', '#42b983');
   document.body.style.setProperty('--el-color-primary-light-9', '#d4ffeb');
   document.body.style.setProperty('--el-color-primary-light-3', '#47de99');
 })
+
+// let transitionName = ref();
+// const route = useRoute()
+// watch(route, (to: any, from: any) => {
+//       console.log(transitionName.value);
+//       if (to.meta.index > from.meta.index) {
+//         transitionName.value = "slide-left";
+//       } else {
+//         transitionName.value = "slide-right";
+//       }
+//     }
+// )
+
 </script>
 
 <style lang="scss">
@@ -102,6 +121,7 @@ onMounted(() => {
         -webkit-user-select: none;
         background-color: #42b983;
         transition: 0.3s;
+
         a {
           text-decoration: none;
           color: white;
@@ -188,4 +208,5 @@ onMounted(() => {
     text-decoration: none;
   }
 }
+
 </style>
