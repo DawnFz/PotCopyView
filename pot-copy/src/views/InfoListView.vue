@@ -26,13 +26,11 @@
         <div class="card-bottom">
           <span class="card-title">{{ item.copyName }}</span>
           <div class="card-type-parent">
-            <div class="card-type">{{ item.potType }}
-            </div>
+            <div class="card-type">{{ item.potType }}</div>
+            <div class="card-type" style="background-color: rgb(70, 160, 255)">{{ item.blockName }}</div>
           </div>
           <div class="card-tags-array">
-            <div class="card-tags" v-for="tag in item.tags"
-                 :key="tag">{{ tag }}
-            </div>
+            <div class="card-tags" v-for="tag in item.tags" :key="tag">{{ tag }}</div>
           </div>
         </div>
       </div>

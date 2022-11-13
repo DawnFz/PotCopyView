@@ -18,6 +18,15 @@ export const errorMessage = (err: any) => {
     })
 }
 
+export const errorTips = (err: any) => {
+    ElMessage({
+        message: err,
+        type: 'error',
+        showClose: true,
+        center: true
+    })
+}
+
 export const copySuccessMessage = () => {
     ElMessage({
         message: `复制成功了喵!`,

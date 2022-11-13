@@ -11,8 +11,8 @@
         </el-form-item>
         <el-row>
           <el-col class="el-col-sm-11">
-            <el-form-item class="share-select" label="洞天类型" prop="potType">
-              <el-select class="share-label share-width" v-model="form.data.potType" placeholder="在这里选择洞天类型喵~"
+            <el-form-item class="share-select" label="洞天类型" prop="typeId">
+              <el-select class="share-label share-width" v-model="form.data.typeId" placeholder="在这里选择洞天类型喵~"
                          clearable>
                 <el-option v-for="potType in meta.potTypes"
                            :key="potType.id"
@@ -40,18 +40,18 @@
           <el-input class="share-label" v-model="form.data.uploadUid" placeholder="在这里输入上传者UID喵~" clearable/>
         </el-form-item>
         <!--        多个标签-->
-            <el-form-item label="标签" class="is-required" prop="tagIds">
-              <div style="display: block;margin-bottom:15px;width: 100%" class="share-select">
-                <el-select style="width: 100%" v-model="form.data.tagIds"  multiple placeholder="请选择标签">
-                  <el-option
-                      v-for="tag in meta.tags"
-                      :key="tag.id"
-                      :label="tag.tagName"
-                      :value="tag.id"
-                  />
-                </el-select>
-              </div>
-            </el-form-item>
+        <el-form-item label="标签" class="is-required" prop="tagIds">
+          <div style="display: block;margin-bottom:15px;width: 100%" class="share-select">
+            <el-select style="width: 100%" v-model="form.data.tagIds" multiple placeholder="请选择标签">
+              <el-option
+                  v-for="tag in meta.tags"
+                  :key="tag.id"
+                  :label="tag.tagName"
+                  :value="tag.id"
+              />
+            </el-select>
+          </div>
+        </el-form-item>
         <!--        多个链接-->
         <el-form-item label="图片链接" class="is-required">
           <span style="margin: 0 15px;color: #aaa">因服务器压力原因，图片采用外链形式上传</span>
@@ -84,6 +84,7 @@ import {addCopyInfo, getBlocks, getPotTypes, getTags} from "../webapi/api";
 import {reactive, ref} from "vue";
 import {Plus, Minus} from '@element-plus/icons-vue'
 import {FormInstance, FormRules} from "element-plus";
+import {errorMessage, errorTips} from "../elehelper/message";
 
 const shareForm = ref<FormInstance>()
 const form = reactive({
@@ -112,7 +113,7 @@ const rules = reactive<FormRules>({
   copyName: [
     {required: true, message: '请输入摹本名称~  喵！', trigger: 'blur'},
   ],
-  potType: [
+  typeId: [
     {required: true, message: '请选择洞天类型~  喵！', trigger: 'blur', pattern: /^[0-9]*$/},
   ],
   blockId: [
@@ -136,6 +137,10 @@ const upload = async (sharingForm: FormInstance | undefined) => {
   if (!sharingForm) return
   await sharingForm.validate(async (valid: boolean) => {
     if (valid) {
+      if (form.data.tagIds.length > 3) {
+        errorTips("最多只能选择三个标签!")
+        return;
+      }
       await addCopyInfo(form.data)
     }
   })
@@ -147,6 +152,10 @@ const clear = async (sharingForm: FormInstance | undefined) => {
 }
 
 const addImgRow = () => {
+  if (form.data.imageUrls.length >= 6) {
+    errorTips("最多只能添加六张图片!")
+    return;
+  }
   form.data.imageUrls.push('')
 }
 const deleteImgRow = (index: number) => {

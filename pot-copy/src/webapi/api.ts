@@ -1,6 +1,7 @@
 import $http from './index'
 import {successMessage, errorMessage} from "../elehelper/message";
 import router from "../router";
+import qs from 'qs';
 
 // 获取摹本列表
 export const getCopyInfos = (data: any) => {
@@ -82,20 +83,22 @@ export const getTags = () => {
 }
 
 // 分享我的摹本
-export const addCopyInfo = (data: object) => {
+export const addCopyInfo = (data: any) => {
     return $http({
         method: 'post',
         url: '/Info/shareCopyInfo',
-        params: data
+        data: qs.stringify(data, {
+            indices: false
+        })
     }).then(res => {
         console.log(res)
-        let message: string = res.status.toString()
+        let message: string = res.data.toString()
         if (message === 'error') {
             errorMessage(res)
         } else {
             successMessage(res)
             router.push({
-                path: 'infos',
+                path: 'info-list',
             }).then(r => {
                 console.log(r)
             })
