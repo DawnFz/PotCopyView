@@ -21,7 +21,7 @@
     <div class="copy-list">
       <div class="copy-card" v-for="item in meta.data.content"
            :key="item" @click="toCopyInfo(item.copyId)">
-        <img class="card-top" :src="item.images[0]" alt="{{item.copyName}}"
+        <img class="card-top" :src="item.images[0]" :alt="item.copyName+'：'+item.images[0]"
              ondragstart="return false;"/>
         <div class="card-bottom">
           <span class="card-title">{{ splitTitle(item.copyName) }}</span>
@@ -90,8 +90,7 @@ const loadPage = async (val: number) => {
 const splitTitle = (title: string) => {
   if (title.length > 12) {
     return title.substring(0, 9) + "..."
-  }
-  else{
+  } else {
     return title
   }
 }
