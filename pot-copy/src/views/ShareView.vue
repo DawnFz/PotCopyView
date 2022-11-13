@@ -4,10 +4,12 @@
       <el-form ref="shareForm" :model="form.data" :rules="rules" label-position="top">
         <el-form-item label="摹本编号" prop="copyId">
           <el-input class="share-label"
-                    v-model="form.data.copyId" placeholder="在这里输入摹本编号喵~" clearable/>
+                    maxlength="15" minlength="10" v-model="form.data.copyId" placeholder="在这里输入摹本编号喵~"
+                    clearable/>
         </el-form-item>
         <el-form-item label="摹本名称" prop="copyName">
-          <el-input class="share-label" v-model="form.data.copyName" placeholder="在这里输入摹本名称喵~" clearable/>
+          <el-input class="share-label" maxlength="15" minlength="3" v-model="form.data.copyName"
+                    placeholder="在这里输入摹本名称喵~" clearable/>
         </el-form-item>
         <el-row>
           <el-col class="el-col-sm-11">
@@ -37,7 +39,8 @@
           </el-col>
         </el-row>
         <el-form-item label="上传者UID" prop="uploadUid">
-          <el-input class="share-label" v-model="form.data.uploadUid" placeholder="在这里输入上传者UID喵~" clearable/>
+          <el-input class="share-label" maxlength="9" minlength="9" type="text"
+                    v-model="form.data.uploadUid" placeholder="在这里输入上传者UID喵~" clearable/>
         </el-form-item>
         <!--        多个标签-->
         <el-form-item label="标签" class="is-required" prop="tagIds">

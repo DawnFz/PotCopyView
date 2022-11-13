@@ -4,7 +4,7 @@
     <div class="title-level-two">这是一个尘歌壶摹本分享站</div>
     <div class="body-box">
       <div class="btn-go-list" @click="toPage('info-list')">摹本中心</div>
-      <div class="btn-go-share" @click="toPage('home')">分享摹本</div>
+      <div class="btn-go-share" @click="toPage('share')">分享摹本</div>
       <div class="btn-go-about" @click="toPage('about')">联系我们</div>
     </div>
   </div>

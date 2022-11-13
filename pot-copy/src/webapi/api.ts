@@ -91,12 +91,11 @@ export const addCopyInfo = (data: any) => {
             indices: false
         })
     }).then(res => {
-        console.log(res)
-        let message: string = res.data.toString()
+        let message: string = res.status.toString()
         if (message === 'error') {
             errorMessage(res)
         } else {
-            successMessage(res)
+            successMessage(res.data)
             router.push({
                 path: 'info-list',
             }).then(r => {

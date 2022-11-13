@@ -24,7 +24,7 @@
         <img class="card-top" :src="item.images[0]" alt="{{item.copyName}}"
              ondragstart="return false;"/>
         <div class="card-bottom">
-          <span class="card-title">{{ item.copyName }}</span>
+          <span class="card-title">{{ splitTitle(item.copyName) }}</span>
           <div class="card-type-parent">
             <div class="card-type">{{ item.potType }}</div>
             <div class="card-type" style="background-color: rgb(70, 160, 255)">{{ item.blockName }}</div>
@@ -45,7 +45,7 @@
         prev-text="&emsp;上一页&emsp;"
         next-text="&emsp;下一页&emsp;"
         layout="prev, pager, next"
-        :total="meta.params.total"
+        :total="meta.params.totalSize"
         :current-page="meta.params.pageNum"
         @current-change="loadPage"
     />
@@ -82,8 +82,18 @@ const searchLoad = async () => {
 }
 
 const loadPage = async (val: number) => {
-  meta.page = val
+  meta.params.pageNum = val
   meta.data = await getCopyInfos(meta.params)
+  meta.params.totalSize = meta.data.totalSize
+}
+
+const splitTitle = (title: string) => {
+  if (title.length > 12) {
+    return title.substring(0, 9) + "..."
+  }
+  else{
+    return title
+  }
 }
 
 let toCopyInfo = (copyId: string) => {
@@ -154,11 +164,12 @@ await loadPage(1)
       }
 
       .card-title {
+        margin-top: 15px;
         user-select: none;
         -ms-user-select: none;
         -webkit-user-select: none;
         display: block;
-        font-size: 24px;
+        font-size: 20px;
         font-weight: bold;
       }
 
