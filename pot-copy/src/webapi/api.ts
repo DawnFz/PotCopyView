@@ -1,5 +1,5 @@
 import $http from './index'
-import {successMessage, errorMessage} from "../elehelper/message";
+import {errorMessage, successTips} from "../elehelper/message";
 import router from "../router";
 import qs from 'qs';
 
@@ -95,12 +95,12 @@ export const addCopyInfo = (data: any) => {
         if (message === 'error') {
             errorMessage(res)
         } else {
-            successMessage(res.data)
-            router.push({
-                path: 'info-list',
-            }).then(r => {
-                console.log(r)
-            })
+            successTips(res.data)
+            setTimeout(() => {
+                router.push({
+                    path: 'info-list',
+                })
+            }, 500)
         }
     }).catch(err => {
         errorMessage(err)

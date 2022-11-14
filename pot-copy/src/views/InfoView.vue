@@ -16,17 +16,31 @@
         <div class="info-card-type" style="background-color: #46a0ff">{{ meta.data.blockName }}</div>
         <div class="info-card-tags" v-for="tag in meta.data.tags" :key="tag">{{ tag }}</div>
       </div>
+      <div class="info-card-hr"></div>
       <div>
-        <div class="info-grid-left" style="background-color: #ffc149;">上传者UID</div>
-        <div class="info-grid-right" style="background-color: #97aeff;">{{ meta.data.uploadUid }}</div>
+        <div class="info-grid-left" style="background-color: #ffc149;">摹本作者</div>
+        <div class="info-grid-right" style="background-color: #97aeff;">{{ meta.data.author }}</div>
       </div>
-      <div>
-        <div class="info-grid-left" style="background-color: #1fce85;">上传时间</div>
-        <div class="info-grid-right" style="background-color: #ff97a7;">{{ meta.data.uploadTime }}</div>
+      <div v-show="meta.data.origin!=null">
+        <div class="info-grid-left" style="background-color: #505050;">摹本来源</div>
+        <div class="info-grid-right" style="background-color: #51767a;">
+          <a class="go-origin"
+             :href="meta.data.origin"
+             target="_blank">点击前往</a>
+        </div>
       </div>
+      <div class="info-card-hr"></div>
       <div>
         <div class="info-desc-t">作品描述</div>
         <div class="info-desc-i">{{ meta.data.description }}</div>
+      </div>
+      <div>
+        <div class="info-grid-left" style="background-color: #1fce85;
+        margin: 20px auto 0">上传时间
+        </div>
+        <div class="info-grid-right" style="background-color: #ff97a7;
+        margin: 20px auto 0">{{ meta.data.uploadTime }}
+        </div>
       </div>
     </div>
   </div>
@@ -72,6 +86,16 @@ const copy = async (msg: string) => {
       object-fit: cover;
     }
   }
+
+  .info-card-hr {
+    margin: 10px auto;
+    height: 2px;
+    width: 95%;
+    transition: .5s;
+    border-radius: 2px;
+    background-color: #42b983;
+  }
+
 
   .info-card {
     margin: 0 auto 15px;
@@ -125,6 +149,10 @@ const copy = async (msg: string) => {
     border-radius: 35px;
     margin: 20px auto;
     transition: 0.5s;
+
+    a{
+      color: white;
+    }
 
     .info-copy-id {
       user-select: none;
@@ -245,6 +273,7 @@ const copy = async (msg: string) => {
     transition: 0.5s;
     font-size: 22px;
   }
+
   .info-grid-left {
     margin: 20px 0;
     display: inline-block;

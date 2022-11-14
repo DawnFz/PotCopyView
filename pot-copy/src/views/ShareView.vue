@@ -4,7 +4,7 @@
       <el-form ref="shareForm" :model="form.data" :rules="rules" label-position="top">
         <el-form-item label="摹本编号" prop="copyId">
           <el-input class="share-label"
-                    maxlength="15" minlength="10" v-model="form.data.copyId" placeholder="在这里输入摹本编号喵~"
+                    maxlength="16" minlength="7" v-model="form.data.copyId" placeholder="在这里输入摹本编号喵~"
                     clearable/>
         </el-form-item>
         <el-form-item label="摹本名称" prop="copyName">
@@ -38,10 +38,16 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="上传者UID" prop="uploadUid">
-          <el-input class="share-label" maxlength="9" minlength="9" type="text"
-                    v-model="form.data.uploadUid" placeholder="在这里输入上传者UID喵~" clearable/>
+        <el-form-item label="摹本作者" prop="author">
+          <el-input class="share-label" maxlength="16" type="text"
+                    v-model="form.data.author" placeholder="在这里输入摹本作者喵~" clearable/>
         </el-form-item>
+
+        <el-form-item label="摹本来源 [可选]" prop="origin">
+          <el-input class="share-label" type="text"
+                    v-model="form.data.origin" placeholder="在这里输入摹本来源 [链接]" clearable/>
+        </el-form-item>
+
         <!--        多个标签-->
         <el-form-item label="标签" class="is-required" prop="tagIds">
           <div style="display: block;margin-bottom:15px;width: 100%" class="share-select">
@@ -122,14 +128,27 @@ const rules = reactive<FormRules>({
   blockId: [
     {required: true, message: '请选择所在区域~  喵！', trigger: 'blur', pattern: /^[0-9]*$/},
   ],
-  uploadUid: [
-    {required: true, message: '请输入正确的上传者uid格式！', trigger: 'blur', pattern: /^[0-9]*$/},
+  author: [
+    {required: true, message: '请输入作者名称！', trigger: 'blur'},
+  ],
+  origin: [
+    {
+      required: false,
+      message: '请输入正确的摹本来源链接 [带http]！',
+      trigger: 'blur',
+      pattern: /\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?/
+    },
   ],
   tagIds: [
     {required: true, message: '请选择标签~  喵！', trigger: 'blur'},
   ],
   imageUrls: [
-    {required: true, message: '请输入图片链接~  喵！', trigger: 'blur'},
+    {
+      required: true,
+      message: '请输入正确的图片链接 [带http]~  喵！',
+      trigger: 'blur',
+      pattern: /\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?/
+    },
   ],
   description: [
     {required: true, message: '请输入摹本详情~  喵！', trigger: 'blur'},

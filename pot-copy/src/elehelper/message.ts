@@ -9,6 +9,16 @@ export const successMessage = (res: any) => {
     })
 }
 
+export const successTips = (res: any) => {
+    ElMessage({
+        message: res,
+        type: 'success',
+        showClose: true,
+        center: true
+    })
+}
+
+
 export const errorMessage = (err: any) => {
     ElMessage({
         message: `服务器错误：${err.message}`,
