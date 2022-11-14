@@ -10,7 +10,7 @@
     <div class="info-title">{{ meta.data.copyName }}</div>
     <div class="info-grid">
       <div class="info-copy-id" @click="copy(meta.data.copyId)">{{ meta.data.copyId }}</div>
-      <div class="info-copy-tips">tips: 点击上方摹本代码复制</div>
+      <div class="info-copy-tips">tips: 点击上方摹本摹数复制</div>
       <div class="info-card">
         <div class="info-card-type">{{ meta.data.potType }}</div>
         <div class="info-card-type" style="background-color: #46a0ff">{{ meta.data.blockName }}</div>

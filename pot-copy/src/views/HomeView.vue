@@ -1,5 +1,8 @@
 <template>
   <div class="home-container">
+    <div class="share-state-tips">
+      没有经过尘歌壶原作者同意转载的摹本禁止上传，大家如果有看到有侵权的可以联系站长处理一下，预计这两天会加入审核功能
+    </div>
     <div class="title-level-one">欢迎使用 PotCopy</div>
     <div class="title-level-two">这是一个尘歌壶摹本分享站</div>
     <div class="body-box">
@@ -27,8 +30,19 @@ const toPage = (param: string) => {
   text-align: center;
   width: 75%;
 
+  .share-state-tips {
+    transition: .5s;
+    font-size: 18px;
+    color: white;
+    font-weight: bold;
+    background-color: #ff8f92;
+    margin: 60px auto 15px;
+    padding: 15px;
+    border-radius: 20px;
+  }
+
   .title-level-one {
-    margin: 150px auto 50px;
+    margin: 80px auto 50px;
     height: 160px;
     font-size: 64px;
     font-weight: bold;
@@ -126,17 +140,29 @@ const toPage = (param: string) => {
   .btn-go-share {
     display: none;
   }
+  .share-state-tips {
+    width: 40%;
+    transition: .5s;
+  }
 }
 
 @media screen and (min-width: 768px) and (max-width: 991px) {
   .btn-go-share {
     display: inline-block;
   }
+  .share-state-tips {
+    width: 75%;
+    transition: .5s;
+  }
 }
 
 @media screen and (max-width: 767px) {
   .btn-go-share {
     display: inline-block;
+  }
+  .share-state-tips {
+    width: 100%;
+    transition: .5s;
   }
 }
 

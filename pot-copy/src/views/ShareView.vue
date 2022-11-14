@@ -1,10 +1,11 @@
 <template>
   <div class="share-container">
     <div class="share-form">
+      <div class="share-state">没有经过尘歌壶原作者同意转载的摹本禁止上传，大家如果有看到有侵权的可以联系站长处理一下，预计这两天会加入审核功能</div>
       <el-form ref="shareForm" :model="form.data" :rules="rules" label-position="top">
-        <el-form-item label="摹本编号" prop="copyId">
+        <el-form-item label="摹本摹数" prop="copyId">
           <el-input class="share-label"
-                    maxlength="16" minlength="7" v-model="form.data.copyId" placeholder="在这里输入摹本编号喵~"
+                    maxlength="16" minlength="7" v-model="form.data.copyId" placeholder="在这里输入摹本摹数~"
                     clearable/>
         </el-form-item>
         <el-form-item label="摹本名称" prop="copyName">
@@ -27,12 +28,12 @@
           </el-col>
           <el-col class="el-col-sm-12 el-col-sm-offset-1">
             <el-form-item class="share-select share-select-short" label="所在区域" prop="blockId">
-              <el-select class="share-label share-width" v-model="form.data.blockId" placeholder="在这里选择所在区域喵~"
-                         clearable>
+              <el-select class="share-label share-width" v-model="selBlockId"
+                         placeholder="在这里选择所在区域喵~" clearable>
                 <el-option v-for="block in meta.blocks"
                            :key="block.blockId"
                            :label="block.blockName"
-                           :value="block.blockId">
+                           :value="block.blockId" @click="setBlockId(block.blockId)">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -93,11 +94,14 @@ import {addCopyInfo, getBlocks, getPotTypes, getTags} from "../webapi/api";
 import {reactive, ref} from "vue";
 import {Plus, Minus} from '@element-plus/icons-vue'
 import {FormInstance, FormRules} from "element-plus";
-import {errorMessage, errorTips} from "../elehelper/message";
+import {errorTips} from "../elehelper/message";
 
 const shareForm = ref<FormInstance>()
+let selBlockId = ref()
+
 const form = reactive({
   data: {
+    blockId: null,
     tagIds: [],
     imageUrls: ['']
   }
@@ -110,14 +114,19 @@ const meta: any = reactive({
 meta.potTypes = await getPotTypes()
 meta.tags = await getTags()
 
-
 const getBlocksByType = async (typeId: number) => {
+  selBlockId.value = null;
   meta.blocks = await getBlocks(typeId)
+}
+
+const setBlockId = (val: any) => {
+  selBlockId.value = val;
+  form.data.blockId = selBlockId.value
 }
 
 const rules = reactive<FormRules>({
   copyId: [
-    {required: true, message: '请输入正确的摹本编号！', trigger: 'blur', pattern: /^[0-9]*$/},
+    {required: true, message: '请输入正确的摹本摹数！', trigger: 'blur', pattern: /^[0-9]*$/},
   ],
   copyName: [
     {required: true, message: '请输入摹本名称~  喵！', trigger: 'blur'},
@@ -194,6 +203,17 @@ const deleteImgRow = (index: number) => {
     margin: 0 auto 15px;
     overflow: hidden;
     transition: 0.5s;
+
+    .share-state{
+      transition: .5s;
+      font-size: 18px;
+      color: white;
+      font-weight: bold;
+      background-color: #ff8f92;
+      margin: 15px auto 30px;
+      padding: 15px;
+      border-radius: 20px;
+    }
 
     .share-width {
       width: 100%;
