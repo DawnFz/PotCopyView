@@ -1,7 +1,9 @@
 <template>
   <div class="share-container">
     <div class="share-form">
-      <div class="share-state">没有经过尘歌壶原作者同意转载的摹本禁止上传，大家如果有看到有侵权的可以联系站长处理一下，预计这两天会加入审核功能</div>
+      <div class="share-state">
+        审核功能已上线，未经过尘歌壶原作者同意的转载摹本不予通过审核，如果有看到有侵权的可以联系站长处理一下
+      </div>
       <el-form ref="shareForm" :model="form.data" :rules="rules" label-position="top">
         <el-form-item label="摹本摹数" prop="copyId">
           <el-input class="share-label"
@@ -9,13 +11,14 @@
                     clearable/>
         </el-form-item>
         <el-form-item label="摹本名称" prop="copyName">
+          <div><span style="margin: 0 15px;color: #ff8282">转载请在标题上以【转】注明</span></div>
           <el-input class="share-label" maxlength="15" minlength="3" v-model="form.data.copyName"
                     placeholder="在这里输入摹本名称喵~" clearable/>
         </el-form-item>
         <el-row>
-          <el-col class="el-col-sm-11">
+          <el-col class="el-col-sm-7">
             <el-form-item class="share-select" label="洞天类型" prop="typeId">
-              <el-select class="share-label share-width" v-model="form.data.typeId" placeholder="在这里选择洞天类型喵~"
+              <el-select class="share-label share-width" v-model="form.data.typeId" placeholder="选择洞天类型喵~"
                          clearable>
                 <el-option v-for="potType in meta.potTypes"
                            :key="potType.id"
@@ -26,15 +29,25 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col class="el-col-sm-12 el-col-sm-offset-1">
+          <el-col class="el-col-sm-8 el-col-sm-offset-1">
             <el-form-item class="share-select share-select-short" label="所在区域" prop="blockId">
               <el-select class="share-label share-width" v-model="selBlockId"
-                         placeholder="在这里选择所在区域喵~" clearable>
+                         placeholder="选择所在区域喵~" clearable>
                 <el-option v-for="block in meta.blocks"
                            :key="block.blockId"
                            :label="block.blockName"
                            :value="block.blockId" @click="setBlockId(block.blockId)">
                 </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col class="el-col-sm-7 el-col-sm-offset-1">
+            <el-form-item class="share-select share-select-short" label="所在服务器" prop="server">
+              <el-select class="share-label share-width" v-model="form.data.server"
+                         placeholder="选择所在服务器" clearable>
+                <el-option label="官方服务器" value="0"/>
+                <el-option label="哔哩哔哩服" value="1"/>
+                <el-option label="国际服务器" value="2"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -64,8 +77,10 @@
         </el-form-item>
         <!--        多个链接-->
         <el-form-item label="图片链接" class="is-required">
-          <span style="margin: 0 15px;color: #aaa">因服务器压力原因，图片采用外链形式上传</span>
-          <span><a href="https://www.superbed.cn/" target="_blank">点我去图床</a></span>
+          <div><span style="margin: 0 15px;color: #ff8282">转载请带上原作者同意转载的授权截图，否则不予通过审核</span></div>
+          <span style="margin-left: 15px;color: #aaa">因本站服务器压力原因，展示图片采用外链形式上传</span>
+          <span style="margin: 0 15px"><a href="https://www.superbed.cn/" target="_blank">点我去图床</a></span>
+
           <div v-for="(item,index) in form.data.imageUrls" class="share-div">
             <el-form-item class="share-label-short" :rules="rules.imageUrls" :prop="`imageUrls.${index}`">
               <el-input v-model="form.data.imageUrls[index]" placeholder="在这里输入图片链接喵~" clearable/>
@@ -137,6 +152,9 @@ const rules = reactive<FormRules>({
   blockId: [
     {required: true, message: '请选择所在区域~  喵！', trigger: 'blur', pattern: /^[0-9]*$/},
   ],
+  server: [
+    {required: true, message: '请选择所在服务器', trigger: 'blur', pattern: /^[0-9]*$/},
+  ],
   author: [
     {required: true, message: '请输入作者名称！', trigger: 'blur'},
   ],
@@ -204,12 +222,12 @@ const deleteImgRow = (index: number) => {
     overflow: hidden;
     transition: 0.5s;
 
-    .share-state{
+    .share-state {
       transition: .5s;
       font-size: 18px;
       color: white;
       font-weight: bold;
-      background-color: #ff8f92;
+      background-color: rgb(15, 136, 50);
       margin: 15px auto 30px;
       padding: 15px;
       border-radius: 20px;

@@ -48,7 +48,7 @@
 
 <script lang="ts" setup>
 import {getCopyInfo} from "../webapi/api";
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 import {useRoute} from "vue-router";
 import {copyErrorMessage, copySuccessMessage} from "../elehelper/message";
 import useClipboard from 'vue-clipboard3';
@@ -56,9 +56,18 @@ import useClipboard from 'vue-clipboard3';
 const meta = reactive({
   data: {}
 })
+
 const route = useRoute()
-let copyId: any = route.query.copyId
-meta.data = await getCopyInfo(copyId)
+const props = defineProps<{ data: any }>();
+let copyId: any
+const _data: any = ref(props.data)
+if (_data.value !== undefined) {
+  meta.data =_data.value
+} else {
+  copyId = route.query.copyId
+  meta.data = await getCopyInfo(copyId)
+}
+
 const {toClipboard} = useClipboard()
 const copy = async (msg: string) => {
   try {
@@ -150,7 +159,7 @@ const copy = async (msg: string) => {
     margin: 20px auto;
     transition: 0.5s;
 
-    a{
+    a {
       color: white;
     }
 

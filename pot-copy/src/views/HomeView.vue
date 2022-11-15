@@ -1,8 +1,5 @@
 <template>
   <div class="home-container">
-    <div class="share-state-tips">
-      没有经过尘歌壶原作者同意转载的摹本禁止上传，大家如果有看到有侵权的可以联系站长处理一下，预计这两天会加入审核功能
-    </div>
     <div class="title-level-one">欢迎使用 PotCopy</div>
     <div class="title-level-two">这是一个尘歌壶摹本分享站</div>
     <div class="body-box">
@@ -15,7 +12,6 @@
 
 <script lang="ts" setup>
 import router from "../router";
-
 
 const toPage = (param: string) => {
   setTimeout(() => {
@@ -35,7 +31,7 @@ const toPage = (param: string) => {
     font-size: 18px;
     color: white;
     font-weight: bold;
-    background-color: #ff8f92;
+    background-color: rgb(15, 136, 50);
     margin: 60px auto 15px;
     padding: 15px;
     border-radius: 20px;
@@ -161,7 +157,7 @@ const toPage = (param: string) => {
     display: inline-block;
   }
   .share-state-tips {
-    width: 100%;
+    width: 85%;
     transition: .5s;
   }
 }

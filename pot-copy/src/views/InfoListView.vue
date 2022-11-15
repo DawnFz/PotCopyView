@@ -1,27 +1,45 @@
 <template>
   <div class="info-list-container">
     <div class="copy-search">
-      <el-input
-          v-model="inputText"
-          placeholder="输入查找的内容喵~"
-          class="input-with-select"
-          style="height: 45px;">
-        <template #prepend>
-          <el-select v-model="searchType" placeholder="类型" style="width: 90px">
-            <el-option label="全部" value="-1"/>
-            <el-option v-for="type in meta.types" :key="type" :label="type.typeName" :value="type.id"/>
-          </el-select>
-        </template>
-        <template #append>
-          <el-button style="width: 50px" :icon="Search" @click="searchLoad"/>
-        </template>
-      </el-input>
+      <div class="info-search-server-pc">
+        <el-select class="server-pc" v-model="meta.params.server" placeholder="全服">
+          <el-option label="官服" value="0"/>
+          <el-option label="哔哩" value="1"/>
+          <el-option label="国际" value="2"/>
+        </el-select>
+      </div>
+      <div class="info-search-server-pe">
+        <el-select v-model="meta.params.server" style="width: 100%" placeholder="全服">
+          <el-option label="官服" value="0"/>
+          <el-option label="哔哩" value="1"/>
+          <el-option label="国际" value="2"/>
+        </el-select>
+      </div>
+      <div class="search-box">
+        <el-input
+            v-model="inputText"
+            placeholder="输入查找的内容喵~"
+            class="input-with-select"
+            style="height: 45px">
+          <template #prepend>
+            <el-select v-model="searchType" placeholder="类型" style="width: 90px">
+              <el-option label="全部" value="-1"/>
+              <el-option v-for="type in meta.types" :key="type" :label="type.typeName" :value="type.id"/>
+            </el-select>
+          </template>
+          <template #append>
+            <el-button style="width: 50px" :icon="Search" @click="searchLoad"/>
+          </template>
+        </el-input>
+      </div>
 
     </div>
     <div class="copy-list">
       <div class="copy-card" v-for="item in meta.data.content"
            :key="item" @click="toCopyInfo(item.copyId)">
-        <img class="card-top" :src="item.images[0]" :alt="item.copyName+'：'+item.images[0]"
+<!--        <div style="position: absolute;color: #858585;right: 10px">
+          <el-icon style="height: 50px;width: 50px;font-style: normal;"><View />{{item.hits}}</el-icon></div>-->
+        <img class="card-top" :src="item.images[0]" :alt="item.copyName+'：图片加载失败'"
              ondragstart="return false;"/>
         <div class="card-bottom">
           <span class="card-title">{{ splitTitle(item.copyName) }}</span>
@@ -54,8 +72,8 @@
 
 <script lang="ts" setup>
 import {reactive, ref} from 'vue'
-import {getCopyInfos, getPotTypes} from "../webapi/api";
-import {Search} from '@element-plus/icons-vue';
+import {getCopyInfos, getPotTypes, getTags} from "../webapi/api";
+import {Search,View} from '@element-plus/icons-vue';
 import router from "../router";
 
 const searchType = ref()
@@ -103,7 +121,6 @@ let toCopyInfo = (copyId: string) => {
     })
   }, 500);
 }
-
 meta.types = await getPotTypes()
 await loadPage(1)
 </script>
@@ -118,6 +135,9 @@ await loadPage(1)
   .copy-search {
     margin: 40px auto 20px;
     transition: 0.5s;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
 
     .input-with-select .el-input-group__prepend {
       background-color: var(--el-fill-color-blank);
@@ -240,8 +260,21 @@ await loadPage(1)
     transition: 0.5s;
     width: 100%;
   }
+  .info-search-server-pc {
+    display: none;
+    transition: .5s;
+  }
+  .info-search-server-pe {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 100%;
+    margin: 10px auto;
+    transition: .5s;
+  }
   .copy-card {
     margin: 25px 0;
+    transition: .5s;
   }
 }
 
@@ -254,6 +287,22 @@ await loadPage(1)
   .copy-card {
     margin: 25px 10px;
   }
+  .info-search-server-pc {
+    display: none;
+    transition: .5s;
+  }
+  .info-search-server-pe {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 100%;
+    margin: 10px auto;
+    transition: .5s;
+  }
+  .copy-card {
+    margin: 25px 0;
+    transition: .5s;
+  }
 }
 
 /* pc */
@@ -264,6 +313,17 @@ await loadPage(1)
   }
   .copy-card {
     margin: 25px 15px;
+  }
+  .search-box {
+    display: inline-block;
+    width: 85%;
+  }
+  .info-search-server-pc {
+    width: 15%;
+    transition: .5s;
+  }
+  .info-search-server-pe {
+    display: none;
   }
 }
 

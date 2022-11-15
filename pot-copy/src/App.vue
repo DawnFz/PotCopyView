@@ -44,9 +44,24 @@ onMounted(() => {
 
 const toShare = () => {
   setTimeout(() => {
-    router.push("share")
+    router.push("/share")
   }, 500)
 }
+
+import {ElNotification} from "element-plus";
+import {h} from "vue";
+
+if(localStorage.getItem("NTF221116")!=="hide"){
+  ElNotification({
+    title: '公告 (2022-11-16)',
+    offset: 100,
+    message: h('b', { style: 'color: teal;font-weight:bold;' },
+        '审核功能已上线，未经过尘歌壶原作者同意的转载摹本不予通过审核，如果有看到有违规的或者失效的可以联系站长处理一下'),
+  })
+  localStorage.setItem("NTF221116","hide")
+}
+
+
 
 </script>
 

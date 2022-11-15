@@ -1,5 +1,5 @@
 import $http from './index'
-import {errorMessage, successTips} from "../elehelper/message";
+import {errorMessage, errorTips, successTips} from "../elehelper/message";
 import router from "../router";
 import qs from 'qs';
 
@@ -66,7 +66,6 @@ export const getBlocks = (typeId: number) => {
     })
 }
 
-
 // 获取标签
 export const getTags = () => {
     return $http({
@@ -99,7 +98,7 @@ export const addCopyInfo = (data: any) => {
             setTimeout(() => {
                 router.push({
                     path: 'info-list',
-                })
+                }).catch()
             }, 500)
         }
     }).catch(err => {
