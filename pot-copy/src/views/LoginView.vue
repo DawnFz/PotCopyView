@@ -2,30 +2,24 @@
   <div class="login-container">
     <div class="login-card">
       <div class="login-card-account">
-        <el-input v-model="grantee" placeholder="Please input grantee"/>
+        <el-input v-model="username" placeholder="请输入用户名"/>
       </div>
       <div class="login-card-key">
-        <el-input v-model="key" type="password" placeholder="Please input manager key"/>
+        <el-input v-model="password" type="password" placeholder="请输入登录密码"/>
       </div>
-      <div class="login-card-btn" @click="verifyManager">verify</div>
+      <div class="login-card-btn" @click="verifyManager">登录</div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import {ref} from 'vue'
-import {getAuthToken} from "../webapi/manager-api";
-import router from "../router";
+import {getAuthToken} from "../webapi/t-api";
 
-const grantee = ref('')
-const key = ref('')
+const username = ref('')
+const password = ref('')
 const verifyManager = async () => {
-  let success = await getAuthToken(grantee.value, key.value)
-  if (success) {
-    setTimeout(() => {
-      router.push("manager").catch()
-    }, 1000)
-  }
+  await getAuthToken(username.value, password.value)
 }
 </script>
 

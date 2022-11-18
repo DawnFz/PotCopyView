@@ -86,9 +86,7 @@ export const addCopyInfo = (data: any) => {
     return $http({
         method: 'post',
         url: '/Info/shareCopyInfo',
-        data: qs.stringify(data, {
-            indices: false
-        })
+        data: data
     }).then(res => {
         let message: string = res.status.toString()
         if (message === 'error') {

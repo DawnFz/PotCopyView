@@ -37,13 +37,14 @@
     <div class="copy-list">
       <div class="copy-card" v-for="item in meta.data.content"
            :key="item" @click="toCopyInfo(item.copyId)">
-<!--        <div style="position: absolute;color: #858585;right: 10px">
-          <el-icon style="height: 50px;width: 50px;font-style: normal;"><View />{{item.hits}}</el-icon></div>-->
+        <!--        <div style="position: absolute;color: #858585;right: 10px">
+                  <el-icon style="height: 50px;width: 50px;font-style: normal;"><View />{{item.hits}}</el-icon></div>-->
         <img class="card-top" :src="item.images[0]" :alt="item.copyName+'：图片加载失败'"
              ondragstart="return false;"/>
         <div class="card-bottom">
           <span class="card-title">{{ splitTitle(item.copyName) }}</span>
           <div class="card-type-parent">
+            <div class="card-type" :style="judgeServerStyle(item.server)">{{ judgeServer(item.server) }}</div>
             <div class="card-type">{{ item.potType }}</div>
             <div class="card-type" style="background-color: rgb(70, 160, 255)">{{ item.blockName }}</div>
           </div>
@@ -73,7 +74,8 @@
 <script lang="ts" setup>
 import {reactive, ref} from 'vue'
 import {getCopyInfos, getPotTypes, getTags} from "../webapi/api";
-import {Search,View} from '@element-plus/icons-vue';
+import {Search, View} from '@element-plus/icons-vue';
+import {judgeServer,judgeServerStyle} from '../elehelper/utils'
 import router from "../router";
 
 const searchType = ref()
@@ -122,6 +124,7 @@ let toCopyInfo = (copyId: string) => {
   }, 500);
 }
 meta.types = await getPotTypes()
+
 await loadPage(1)
 </script>
 

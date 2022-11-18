@@ -1,9 +1,6 @@
 <template>
-  <div class="share-container">
+  <div class="author-share-container">
     <div class="share-form">
-      <div class="share-state">
-        审核功能已上线，未经过尘歌壶原作者同意的转载摹本不予通过审核，如果有看到有侵权的可以联系站长处理一下
-      </div>
       <el-form ref="shareForm" :model="form.data" :rules="rules" label-position="top">
         <el-row>
           <el-col class="el-col-sm-17">
@@ -65,20 +62,11 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="摹本作者" prop="author">
-          <el-input class="share-label" maxlength="16" type="text"
-                    v-model="form.data.author" placeholder="在这里输入摹本作者喵~" clearable/>
-        </el-form-item>
-
         <el-form-item label="摹本来源 [可选]" prop="origin">
-          <div v-if="repostType"><span
-              style="margin: 0 15px;color: #ff8282">转载请带上原作者的作品链接(如果有)</span>
-          </div>
           <el-input class="share-label" type="text"
                     v-model="form.data.origin" placeholder="在这里输入摹本来源 [链接]" clearable/>
         </el-form-item>
-
-        <!--        多个标签-->
+        <!-- 多个标签 -->
         <el-form-item label="标签" class="is-required" prop="tagIds">
           <div style="display: block;margin-bottom:15px;width: 100%" class="share-select">
             <el-select style="width: 100%" v-model="form.data.tagIds" multiple placeholder="请选择标签">
@@ -91,14 +79,11 @@
             </el-select>
           </div>
         </el-form-item>
-        <!--        多个链接-->
+        <!-- 多个链接-->
         <el-form-item label="图片链接" class="is-required">
-          <div v-if="repostType"><span
-              style="margin: 0 15px;color: #ff8282">转载请带上原作者同意转载的授权截图</span>
-          </div>
           <span style="margin-left: 15px;color: #aaa">因本站服务器压力原因，展示图片采用外链形式上传</span>
           <span style="margin: 0 15px"><a href="https://www.superbed.cn/" target="_blank">点我去图床</a></span>
-          <div><span style="margin-left: 15px;color: #aaa">请不要直接使用有防盗链的图片链接，否则无法加载，如NGA的站内图片</span></div>
+
           <div v-for="(item,index) in form.data.imageUrls" class="share-div">
             <el-form-item class="share-label-short" :rules="rules.imageUrls" :prop="`imageUrls.${index}`">
               <el-input v-model="form.data.imageUrls[index]" placeholder="在这里输入图片链接喵~" clearable/>
@@ -109,8 +94,6 @@
           </div>
         </el-form-item>
         <el-form-item label="摹本描述/简介" prop="description">
-          <div v-if="refitType"><span
-              style="margin: 0 15px;color: #ff8282">二改请在描述或来源带上原作者的作品链接</span></div>
           <el-input class="share-label" v-model="form.data.description"
                     placeholder="在这里输入摹本描述喵~可以多写一点喵~" type="textarea" autosize clearable/>
         </el-form-item>
@@ -125,17 +108,30 @@
 </template>
 
 <script lang="ts" setup>
-import {addCopyInfo, getBlocks, getPotTypes, getTags} from "../webapi/api";
+import {getBlocks, getPotTypes, getTags} from "../../webapi/api";
 import {reactive, ref} from "vue";
 import {Plus, Minus} from '@element-plus/icons-vue'
 import {FormInstance, FormRules} from "element-plus";
-import {errorTips} from "../elehelper/message";
+import {errorTips} from "../../elehelper/message";
+import {shareCopyInfoVerity} from "../../webapi/t-api";
 
 const shareForm = ref<FormInstance>()
 let selBlockId = ref()
-
 let refitType = ref(false)
 let repostType = ref(false)
+
+const changeType = (val: number) => {
+  if (val === 0) {
+    refitType.value = false;
+    repostType.value = false;
+  } else if (val === 1) {
+    refitType.value = false;
+    repostType.value = true;
+  } else if (val === 2) {
+    refitType.value = true;
+    repostType.value = false;
+  }
+}
 
 const form = reactive({
   data: {
@@ -151,19 +147,6 @@ const meta: any = reactive({
 })
 meta.potTypes = await getPotTypes()
 meta.tags = await getTags()
-
-const changeType = (val: number) => {
-  if (val === 0) {
-    refitType.value = false;
-    repostType.value = false;
-  } else if (val === 1) {
-    refitType.value = false;
-    repostType.value = true;
-  } else if (val === 2) {
-    refitType.value = true;
-    repostType.value = false;
-  }
-}
 
 const getBlocksByType = async (typeId: number) => {
   selBlockId.value = null;
@@ -185,9 +168,6 @@ const rules = reactive<FormRules>({
   typeId: [
     {required: true, message: '请选择洞天类型~  喵！', trigger: 'blur', pattern: /^[0-9]*$/},
   ],
-  uploadType: [
-    {required: true, message: '请选择上传类型 ！', trigger: 'blur', pattern: /^[0-9]*$/},
-  ],
   blockId: [
     {required: true, message: '请选择所在区域~  喵！', trigger: 'blur', pattern: /^[0-9]*$/},
   ],
@@ -196,6 +176,9 @@ const rules = reactive<FormRules>({
   ],
   author: [
     {required: true, message: '请输入作者名称！', trigger: 'blur'},
+  ],
+  uploadType: [
+    {required: true, message: '请选择上传类型 ！', trigger: 'blur', pattern: /^[0-9]*$/},
   ],
   origin: [
     {
@@ -229,7 +212,7 @@ const upload = async (sharingForm: FormInstance | undefined) => {
         errorTips("最多只能选择三个标签!")
         return;
       }
-      await addCopyInfo(form.data)
+      await shareCopyInfoVerity(form.data)
     }
   })
 }
@@ -252,8 +235,8 @@ const deleteImgRow = (index: number) => {
 </script>
 
 <style lang="scss">
-.share-container {
-  margin: 50px auto;
+.author-share-container {
+  margin: 50px 25% 50px 28%;
   transition: 0.5s;
 
   .share-form {
@@ -294,12 +277,6 @@ const deleteImgRow = (index: number) => {
 
       .share-input {
         display: inline-block;
-        //.el-input__wrapper {
-        //  width: calc( 44vw );
-        //}
-        //.el-input__inner {
-        //  width: 100%;
-        //}
       }
 
       .share-button {
@@ -348,7 +325,7 @@ const deleteImgRow = (index: number) => {
 
 /* mobile */
 @media screen and (max-width: 767px) {
-  .share-container {
+  .author-share-container {
     width: 80%;
     transition: 0.5s;
 
@@ -370,7 +347,7 @@ const deleteImgRow = (index: number) => {
 
 /* pad */
 @media screen and (min-width: 767px) and (max-width: 992px) {
-  .share-container {
+  .author-share-container {
     width: 90%;
     transition: 0.5s;
 
@@ -392,7 +369,7 @@ const deleteImgRow = (index: number) => {
 
 /* pc */
 @media screen and (min-width: 992px) {
-  .share-container {
+  .author-share-container {
     width: 535px;
     transition: 0.5s;
 

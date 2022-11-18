@@ -8,7 +8,13 @@
       <el-table-column prop="blockName" label="洞天区域" width="100"/>
       <el-table-column show-overflow-tooltip prop="tags" label="包含标签" width="200"/>
       <el-table-column show-overflow-tooltip prop="origin" label="摹本来源" width="260"/>
-      <el-table-column show-overflow-tooltip prop="serverName" label="服务器" width="100"/>
+      <el-table-column show-overflow-tooltip prop="serverName" label="服务器" width="100">
+        <template #default="scope">
+          <el-tag v-if="scope.row.server===0" style="background-color: #60b6da;border:none;color: white">国服</el-tag>
+          <el-tag v-if="scope.row.server===1" style="background-color: #ffa5b6;border:none;color: white">哔哩</el-tag>
+          <el-tag v-if="scope.row.server===2" style="background-color: #838383;border:none;color: white">国际服</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column show-overflow-tooltip prop="uploadTime" label="上传时间" width="120"/>
       <el-table-column show-overflow-tooltip label="审核操作">
         <template #default="scope">
@@ -16,10 +22,10 @@
                      @click="showEdit(scope.$index, scope.row)">详情
           </el-button>
           <el-button size="default" style="color: white" color="#42b983"
-                     @click="setInfoStatus(scope.row,0)">同意
+                     @click="setInfoStatus(scope.row,true)">同意
           </el-button>
           <el-button size="default" type="danger"
-                     @click="setInfoStatus(scope.row,1)">拒绝
+                     @click="setInfoStatus(scope.row,false)">拒绝
           </el-button>
         </template>
       </el-table-column>
@@ -39,7 +45,7 @@
     </div>
 
     <div>
-      <el-dialog destroy-on-close v-model="dialogVisible">
+      <el-dialog style="width: 75%" destroy-on-close v-model="dialogVisible">
         <InfoView :data="tempData"/>
         <template #footer>
       <span class="dialog-footer">
@@ -54,8 +60,8 @@
 
 <script lang="ts" setup>
 import {reactive, ref} from "vue";
-import {getManagerCopyInfos, updateCopyInfo} from "../webapi/manager-api";
-import InfoView from "../views/InfoView.vue";
+import {getManagerCopyInfos, updateCopyInfo} from "../../webapi/t-api";
+import InfoView from "../../views/InfoView.vue";
 
 const dialogVisible = ref(false)
 
@@ -82,13 +88,12 @@ const showEdit = (index: number, data: any) => {
   dialogVisible.value = true
 }
 
-const setInfoStatus = async (row: any, status: number) => {
+const setInfoStatus = async (row: any, control: boolean) => {
   let data: object = {
     copyId: row.copyId,
-    status: status
+    control: control
   }
   let result = await updateCopyInfo(data);
-  console.log(meta.data);
   if (result) await loadPage(meta.params.pageNum)
 }
 

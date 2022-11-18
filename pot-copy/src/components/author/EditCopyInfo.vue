@@ -1,84 +1,21 @@
 <template>
-  <div class="share-container">
+  <div class="edit-container">
     <div class="share-form">
-      <div class="share-state">
-        审核功能已上线，未经过尘歌壶原作者同意的转载摹本不予通过审核，如果有看到有侵权的可以联系站长处理一下
-      </div>
       <el-form ref="shareForm" :model="form.data" :rules="rules" label-position="top">
-        <el-row>
-          <el-col class="el-col-sm-17">
-            <el-form-item label="摹本摹数" prop="copyId">
-              <el-input class="share-label"
-                        maxlength="16" minlength="7" v-model="form.data.copyId" placeholder="在这里输入摹本摹数~"
-                        clearable/>
-            </el-form-item>
-          </el-col>
-          <el-col class="el-col-sm-6 el-col-sm-offset-1">
-            <el-form-item class="share-select share-select-short" label="作品类型" prop="uploadType">
-              <el-select class="share-label share-width" v-model="form.data.uploadType"
-                         placeholder="选择类型" clearable>
-                <el-option label="原创" @click="changeType(0)" value="0"/>
-                <el-option label="转载" @click="changeType(1)" value="1"/>
-                <el-option label="二改" @click="changeType(2)" value="2"/>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <el-form-item label="摹本摹数" prop="copyId">
+          <el-input class="share-label"
+                    maxlength="16" minlength="7" v-model="form.data.copyId" placeholder="在这里输入摹本摹数~"
+                    clearable/>
+        </el-form-item>
         <el-form-item label="摹本名称" prop="copyName">
           <el-input class="share-label" maxlength="15" minlength="3" v-model="form.data.copyName"
                     placeholder="在这里输入摹本名称喵~" clearable/>
         </el-form-item>
-        <el-row>
-          <el-col class="el-col-sm-7">
-            <el-form-item class="share-select" label="洞天类型" prop="typeId">
-              <el-select class="share-label share-width" v-model="form.data.typeId" placeholder="选择洞天类型喵~"
-                         clearable>
-                <el-option v-for="potType in meta.potTypes"
-                           :key="potType.id"
-                           :label="potType.typeName"
-                           :value="potType.id"
-                           @click="getBlocksByType(potType.id)">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col class="el-col-sm-8 el-col-sm-offset-1">
-            <el-form-item class="share-select share-select-short" label="所在区域" prop="blockId">
-              <el-select class="share-label share-width" v-model="selBlockId"
-                         placeholder="选择所在区域喵~" clearable>
-                <el-option v-for="block in meta.blocks"
-                           :key="block.blockId"
-                           :label="block.blockName"
-                           :value="block.blockId" @click="setBlockId(block.blockId)">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col class="el-col-sm-7 el-col-sm-offset-1">
-            <el-form-item class="share-select share-select-short" label="所在服务器" prop="server">
-              <el-select class="share-label share-width" v-model="form.data.server"
-                         placeholder="选择所在服务器" clearable>
-                <el-option label="官方服务器" value="0"/>
-                <el-option label="哔哩哔哩服" value="1"/>
-                <el-option label="国际服务器" value="2"/>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-form-item label="摹本作者" prop="author">
-          <el-input class="share-label" maxlength="16" type="text"
-                    v-model="form.data.author" placeholder="在这里输入摹本作者喵~" clearable/>
-        </el-form-item>
-
         <el-form-item label="摹本来源 [可选]" prop="origin">
-          <div v-if="repostType"><span
-              style="margin: 0 15px;color: #ff8282">转载请带上原作者的作品链接(如果有)</span>
-          </div>
           <el-input class="share-label" type="text"
                     v-model="form.data.origin" placeholder="在这里输入摹本来源 [链接]" clearable/>
         </el-form-item>
-
-        <!--        多个标签-->
+        <!-- 多个标签 -->
         <el-form-item label="标签" class="is-required" prop="tagIds">
           <div style="display: block;margin-bottom:15px;width: 100%" class="share-select">
             <el-select style="width: 100%" v-model="form.data.tagIds" multiple placeholder="请选择标签">
@@ -93,15 +30,9 @@
         </el-form-item>
         <!--        多个链接-->
         <el-form-item label="图片链接" class="is-required">
-          <div v-if="repostType"><span
-              style="margin: 0 15px;color: #ff8282">转载请带上原作者同意转载的授权截图</span>
-          </div>
-          <span style="margin-left: 15px;color: #aaa">因本站服务器压力原因，展示图片采用外链形式上传</span>
-          <span style="margin: 0 15px"><a href="https://www.superbed.cn/" target="_blank">点我去图床</a></span>
-          <div><span style="margin-left: 15px;color: #aaa">请不要直接使用有防盗链的图片链接，否则无法加载，如NGA的站内图片</span></div>
-          <div v-for="(item,index) in form.data.imageUrls" class="share-div">
-            <el-form-item class="share-label-short" :rules="rules.imageUrls" :prop="`imageUrls.${index}`">
-              <el-input v-model="form.data.imageUrls[index]" placeholder="在这里输入图片链接喵~" clearable/>
+          <div v-for="(item,index) in form.data.images" class="share-div">
+            <el-form-item class="share-label-short" :rules="rules.images" :prop="`images.${index}`">
+              <el-input v-model="form.data.images[index]" placeholder="在这里输入图片链接喵~" clearable/>
             </el-form-item>
             <el-button class="share-button" v-if="index === 0" :icon="Plus" @click="addImgRow" circle/>
             <el-button class="share-button" v-if="index > 0" style="color: #f66" :icon="Minus"
@@ -109,15 +40,11 @@
           </div>
         </el-form-item>
         <el-form-item label="摹本描述/简介" prop="description">
-          <div v-if="refitType"><span
-              style="margin: 0 15px;color: #ff8282">二改请在描述或来源带上原作者的作品链接</span></div>
           <el-input class="share-label" v-model="form.data.description"
                     placeholder="在这里输入摹本描述喵~可以多写一点喵~" type="textarea" autosize clearable/>
         </el-form-item>
         <el-form-item class="share-submit">
-
-          <el-button type="primary" @click="upload(shareForm)">提交我的分享</el-button>
-          <el-button @click="clear(shareForm)">清空</el-button>
+          <el-button type="primary" @click="upload(shareForm)">保存修改</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -125,17 +52,16 @@
 </template>
 
 <script lang="ts" setup>
-import {addCopyInfo, getBlocks, getPotTypes, getTags} from "../webapi/api";
+import {addCopyInfo, getBlocks, getPotTypes, getTags} from "../../webapi/api";
 import {reactive, ref} from "vue";
 import {Plus, Minus} from '@element-plus/icons-vue'
 import {FormInstance, FormRules} from "element-plus";
-import {errorTips} from "../elehelper/message";
+import {errorTips} from "../../elehelper/message";
+import {useRoute} from "vue-router";
+import {editCopyInfo} from "../../webapi/t-api";
 
 const shareForm = ref<FormInstance>()
 let selBlockId = ref()
-
-let refitType = ref(false)
-let repostType = ref(false)
 
 const form = reactive({
   data: {
@@ -151,19 +77,6 @@ const meta: any = reactive({
 })
 meta.potTypes = await getPotTypes()
 meta.tags = await getTags()
-
-const changeType = (val: number) => {
-  if (val === 0) {
-    refitType.value = false;
-    repostType.value = false;
-  } else if (val === 1) {
-    refitType.value = false;
-    repostType.value = true;
-  } else if (val === 2) {
-    refitType.value = true;
-    repostType.value = false;
-  }
-}
 
 const getBlocksByType = async (typeId: number) => {
   selBlockId.value = null;
@@ -185,17 +98,8 @@ const rules = reactive<FormRules>({
   typeId: [
     {required: true, message: '请选择洞天类型~  喵！', trigger: 'blur', pattern: /^[0-9]*$/},
   ],
-  uploadType: [
-    {required: true, message: '请选择上传类型 ！', trigger: 'blur', pattern: /^[0-9]*$/},
-  ],
   blockId: [
     {required: true, message: '请选择所在区域~  喵！', trigger: 'blur', pattern: /^[0-9]*$/},
-  ],
-  server: [
-    {required: true, message: '请选择所在服务器', trigger: 'blur', pattern: /^[0-9]*$/},
-  ],
-  author: [
-    {required: true, message: '请输入作者名称！', trigger: 'blur'},
   ],
   origin: [
     {
@@ -221,6 +125,22 @@ const rules = reactive<FormRules>({
   ]
 })
 
+const route = useRoute()
+const props = defineProps<{ data: any }>();
+const _data: any = ref(props.data)
+if (_data.value !== undefined) {
+  form.data = _data.value
+  console.log(_data.value);
+}
+
+
+const emit = defineEmits(["closeThis"])
+const visible = ref()
+const sendEmit = () => {
+  emit("closeThis", visible.value = false)
+}
+
+
 const upload = async (sharingForm: FormInstance | undefined) => {
   if (!sharingForm) return
   await sharingForm.validate(async (valid: boolean) => {
@@ -229,7 +149,8 @@ const upload = async (sharingForm: FormInstance | undefined) => {
         errorTips("最多只能选择三个标签!")
         return;
       }
-      await addCopyInfo(form.data)
+      await editCopyInfo(form.data)
+      sendEmit();
     }
   })
 }
@@ -252,9 +173,10 @@ const deleteImgRow = (index: number) => {
 </script>
 
 <style lang="scss">
-.share-container {
+.edit-container {
   margin: 50px auto;
   transition: 0.5s;
+  background-color: white;
 
   .share-form {
     margin: 0 auto 15px;
@@ -294,12 +216,6 @@ const deleteImgRow = (index: number) => {
 
       .share-input {
         display: inline-block;
-        //.el-input__wrapper {
-        //  width: calc( 44vw );
-        //}
-        //.el-input__inner {
-        //  width: 100%;
-        //}
       }
 
       .share-button {
@@ -348,7 +264,7 @@ const deleteImgRow = (index: number) => {
 
 /* mobile */
 @media screen and (max-width: 767px) {
-  .share-container {
+  .edit-container {
     width: 80%;
     transition: 0.5s;
 
@@ -370,7 +286,7 @@ const deleteImgRow = (index: number) => {
 
 /* pad */
 @media screen and (min-width: 767px) and (max-width: 992px) {
-  .share-container {
+  .edit-container {
     width: 90%;
     transition: 0.5s;
 
@@ -392,7 +308,7 @@ const deleteImgRow = (index: number) => {
 
 /* pc */
 @media screen and (min-width: 992px) {
-  .share-container {
+  .edit-container {
     width: 535px;
     transition: 0.5s;
 
@@ -412,3 +328,4 @@ const deleteImgRow = (index: number) => {
   }
 }
 </style>
+

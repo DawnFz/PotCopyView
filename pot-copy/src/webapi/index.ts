@@ -1,4 +1,6 @@
-import axios, {AxiosRequestConfig} from 'axios'
+import axios from 'axios'
+import router from "../router";
+import {errorTips} from "../elehelper/message";
 
 const $http = axios.create({
     baseURL: 'http://share.snapgenshin.com/PotCopy/api'
@@ -18,6 +20,10 @@ $http.interceptors.request.use((config: any) => {
 
 // 添加响应拦截器
 $http.interceptors.response.use((response) => {
+    if (response.data.code === 401) {
+        location.href = "/#/"
+        errorTips(response.data.message)
+    }
     return response.data
 }, function (error) {
     if (error.response.status === 401) {

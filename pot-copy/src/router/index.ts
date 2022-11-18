@@ -1,4 +1,5 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
+import NotFound from '../views/NotFound.vue'
 import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
 import InfoListView from '../views/InfoListView.vue'
@@ -6,13 +7,24 @@ import InfoView from '../views/InfoView.vue'
 import ShareView from '../views/ShareView.vue'
 import LoginView from '../views/LoginView.vue'
 import ManagerView from '../views/ManagerView.vue'
-import InfoProcess from '../components/InfoProcess.vue'
-import InfoEdit from '../components/InfoEdit.vue'
-import PotType from '../components/PotType.vue'
-import PotBlock from '../components/PotBlock.vue'
-import PotTag from '../components/PotTag.vue'
-import PotNotify from '../components/PotNotify.vue'
-import TypeBlock from '../components/TypeBlock.vue'
+import AuthorView from '../views/AuthorView.vue'
+import InfoProcess from '../components/manager/InfoProcess.vue'
+import InfoEdit from '../components/manager/InfoEdit.vue'
+import PotType from '../components/manager/PotType.vue'
+import PotBlock from '../components/manager/PotBlock.vue'
+import PotTag from '../components/manager/PotTag.vue'
+import PotNotify from '../components/manager/PotNotify.vue'
+import TypeBlock from '../components/manager/TypeBlock.vue'
+import MySharedInfo from '../components/author/MySharedInfo.vue'
+import ShareCopy from '../components/author/ShareCopy.vue'
+
+
+const loginCheck = (to: any, form: any, next: any) => {
+    if (!localStorage.getItem('Token')) {
+        if (to.name == "login") next();
+        else router.push('login').catch()
+    } else next();
+}
 
 const routes = [
     {
@@ -64,6 +76,11 @@ const routes = [
         component: LoginView
     },
     {
+        path: "/:pathMatch(.*)",
+        name: "NotFound",
+        component: NotFound,
+    },
+    {
         path: '/manager',
         name: 'manager',
         meta: {
@@ -71,12 +88,7 @@ const routes = [
         },
         component: ManagerView,
         // 判断是否登录
-        beforeEnter: (to: any, form: any, next: any) => {
-            if (!localStorage.getItem('Token')) {
-                if (to.name == "login") next();
-                else router.push('login').catch()
-            } else next();
-        },
+        beforeEnter: loginCheck,
         redirect: '/manager/process',
         children: [
             {
@@ -115,6 +127,30 @@ const routes = [
                 component: PotNotify
             }
         ]
+    },
+    {
+        path: '/author',
+        name: 'author',
+        meta: {
+            title: 'PotCopy 创作者后台'
+        },
+        component: AuthorView,
+        // 判断是否登录
+        beforeEnter: loginCheck,
+        redirect: '/author/my-info',
+        children:
+            [
+                {
+                    path: "my-info",
+                    name: "my-info",
+                    component: MySharedInfo
+                },
+                {
+                    path: "info-share",
+                    name: "info-share",
+                    component: ShareCopy
+                }
+            ]
     }
 ]
 
