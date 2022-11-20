@@ -13,13 +13,7 @@
           </div>
         </div>
       </div>
-      <el-backtop :right="80" :bottom="80"
-                  style="font-size: 14px;
-                  box-shadow: 0 0 15px #bbbbbb;
-                  color: #42b983;">Top
-      </el-backtop>
       <div style="height: 80px"></div>
-
       <router-view/>
 
 

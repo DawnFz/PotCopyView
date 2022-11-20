@@ -10,6 +10,13 @@
       </div>
       <div class="info-title">{{ meta.data.copyName }}</div>
       <div class="info-grid">
+
+        <div class="info-report-btn" @click="reportWindow = true">
+          <el-icon>
+            <WarnTriangleFilled/>
+          </el-icon>
+        </div>
+
         <div class="info-copy-id" @click="copy(meta.data.copyId)">{{ meta.data.copyId }}</div>
         <div class="info-copy-tips">tips: 点击上方摹本摹数复制</div>
 
@@ -60,22 +67,90 @@
         margin: 30px auto 0">{{ meta.data.uploadTime }}
           </div>
         </div>
+        <div class="info-report-btn-pe" @click="reportWindow = true">
+          <el-icon>
+            <WarnTriangleFilled/>
+          </el-icon>
+          举报
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- 举报框 -->
+  <div>
+    <el-dialog
+        v-model="reportWindow"
+        title="举报该摹本"
+        align-center class="report-window">
+
+      <el-form ref="shareForm" :model="reportData" :rules="rules" label-position="top">
+        <el-form-item label="摹本摹数" prop="copyId">
+          <el-input class="share-label" v-model="meta.data.copyId" clearable readonly/>
+        </el-form-item>
+
+        <el-form-item label="摹本作者" prop="author">
+          <el-input class="share-label" maxlength="16" type="text"
+                    v-model="reportData.author" placeholder="在这里输入摹本原作者" clearable/>
+        </el-form-item>
+
+        <el-form-item label="摹本来源" prop="origin">
+          <el-input class="share-label" type="text"
+                    v-model="reportData.origin" placeholder="在这里输入摹本来源 [链接]" clearable/>
+        </el-form-item>
+
+        <el-form-item label="举报理由" prop="description">
+          <el-input class="share-label" v-model="reportData.note"
+                    placeholder="在这里输入举报该摹本信息的理由" type="textarea"
+                    :autosize="{ minRows: 4, maxRows: 8 }" clearable/>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+      <span class="dialog-footer">
+        <el-button type="danger" @click="reportSubmit(meta.data.copyId)">提交</el-button>
+      </span>
+      </template>
+    </el-dialog>
+  </div>
+
 </template>
 
 <script lang="ts" setup>
-import {getCopyInfo} from "../webapi/api";
+import {getCopyInfo, reportCopyInfo} from "../webapi/api";
 import {reactive, ref} from "vue";
 import {useRoute} from "vue-router";
 import {copyErrorMessage, copySuccessMessage} from "../elehelper/message";
 import {judgeServer, judgeServerStyle, judgeUploadType, judgeTypeStyle} from "../elehelper/utils";
 import useClipboard from 'vue-clipboard3';
+import {WarnTriangleFilled} from '@element-plus/icons-vue'
+import {FormRules} from "element-plus";
 
 const meta = reactive({
   data: {}
 })
+
+let reportData = reactive({
+  copyId: '',
+  author: '',
+  origin: '',
+  note: ''
+})
+
+
+const rules = reactive<FormRules>({
+  author: [
+    {required: true, message: '请输入摹本原作者', trigger: 'blur'},
+  ],
+  origin: [
+    {required: true, message: '请输入作品原出处', trigger: 'blur'},
+  ],
+  note: [
+    {required: true, message: '请输入举报理由', trigger: 'blur'},
+  ],
+})
+
+
+let reportWindow = ref(false);
 
 const route = useRoute()
 const props = defineProps<{ data: any }>();
@@ -98,6 +173,19 @@ const copy = async (msg: string) => {
     copyErrorMessage(e)
   }
 }
+
+const reportSubmit = (copyId: string) => {
+  reportData.copyId = copyId;
+  reportCopyInfo(reportData);
+  reportWindow.value = false;
+  reportData = reactive({
+    copyId: '',
+    author: '',
+    origin: '',
+    note: ''
+  })
+}
+
 </script>
 
 <style lang="scss">
@@ -184,7 +272,31 @@ const copy = async (msg: string) => {
       margin: 20px auto;
       transition: 0.5s;
       box-shadow: 2px 1px 10px 2px rgba(0, 0, 0, 0.2);
-      transition: .5s;
+
+      .info-report-btn:hover {
+        background-color: #ff5c54;
+        transition: .3s;
+      }
+
+      .info-report-btn:active {
+        background-color: #b6403a;
+        transition: .3s;
+      }
+
+      .info-report-btn-pe:hover {
+        background-color: #ff5c54;
+        transition: .3s;
+      }
+
+      .info-report-btn-pe:active {
+        background-color: #b6403a;
+        transition: .3s;
+      }
+
+      .info-report-btn-pe:visited {
+        background-color: #b6403a;
+        transition: .3s;
+      }
 
       a {
         color: white;
@@ -258,6 +370,11 @@ const copy = async (msg: string) => {
 /* mobile */
 @media screen and (max-width: 767px) {
 
+  .report-window {
+    width: 95% !important;
+  }
+
+
   .info-bg-image {
     background-color: rgba(228, 245, 236, 0.78);
     transition: .5s;
@@ -278,6 +395,22 @@ const copy = async (msg: string) => {
     font-size: 18px;
     padding: 30px 10px;
     transition: 0.5s;
+
+    .info-report-btn {
+      display: none;
+      transition: 0.5s;
+    }
+
+    .info-report-btn-pe {
+      margin: 25px auto 0;
+      background-color: #d15351;
+      line-height: 35px;
+      height: 35px;
+      width: 80px;
+      border-radius: 30px;
+      color: white;
+      transition: 0.5s;
+    }
   }
   .info-grid-left {
     margin: 10px 0;
@@ -304,6 +437,11 @@ const copy = async (msg: string) => {
 /* pad */
 @media screen and (min-width: 767px) and (max-width: 992px) {
 
+  .report-window {
+    width: 550px !important;
+  }
+
+
   .info-bg-image {
     transition: .5s;
     background: url("https://pic.imgdb.cn/item/637770ce16f2c2beb1fc0a0d.jpg") no-repeat center;
@@ -322,6 +460,23 @@ const copy = async (msg: string) => {
     padding: 20px;
     transition: 0.5s;
     font-size: 22px;
+
+    .info-report-btn {
+      float: right;
+      background-color: #d15351;
+      line-height: 38px;
+      height: 35px;
+      width: 35px;
+      border-radius: 100%;
+      color: white;
+      transition: 0.5s;
+    }
+
+    .info-report-btn-pe {
+      display: none;
+      transition: 0.5s;
+    }
+
   }
 
   .info-grid-left {
@@ -347,6 +502,11 @@ const copy = async (msg: string) => {
 
 /* pc */
 @media screen and (min-width: 992px) {
+
+  .report-window {
+    width: 550px !important;
+  }
+
   .info-bg-image {
     transition: .5s;
     background: url("https://pic.imgdb.cn/item/637770ce16f2c2beb1fc0a0d.jpg") no-repeat center;
@@ -366,6 +526,22 @@ const copy = async (msg: string) => {
     padding: 40px;
     font-size: 26px;
     transition: 0.5s;
+
+    .info-report-btn {
+      float: right;
+      background-color: #d15351;
+      line-height: 38px;
+      height: 35px;
+      width: 35px;
+      border-radius: 100%;
+      color: white;
+      transition: 0.5s;
+    }
+
+    .info-report-btn-pe {
+      display: none;
+      transition: 0.5s;
+    }
   }
   .info-grid-left {
     margin: 20px 0;

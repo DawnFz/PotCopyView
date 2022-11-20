@@ -5,7 +5,7 @@
         <el-form-item label="摹本摹数" prop="copyId">
           <el-input class="share-label"
                     maxlength="16" minlength="7" v-model="form.data.copyId" placeholder="在这里输入摹本摹数~"
-                    clearable/>
+                    clearable readonly/>
         </el-form-item>
         <el-form-item label="摹本名称" prop="copyName">
           <el-input class="share-label" maxlength="15" minlength="3" v-model="form.data.copyName"
@@ -89,9 +89,6 @@ const setBlockId = (val: any) => {
 }
 
 const rules = reactive<FormRules>({
-  copyId: [
-    {required: true, message: '请输入正确的摹本摹数！', trigger: 'blur', pattern: /^[0-9]*$/},
-  ],
   copyName: [
     {required: true, message: '请输入摹本名称~  喵！', trigger: 'blur'},
   ],

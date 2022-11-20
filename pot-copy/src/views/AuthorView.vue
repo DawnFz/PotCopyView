@@ -18,8 +18,8 @@
                 </el-icon>
                 <span>摹本管理</span>
               </template>
-              <el-menu-item index="/author/info-share">摹本发布</el-menu-item>
               <el-menu-item index="/author/my-info">我发布的</el-menu-item>
+              <el-menu-item index="/author/info-share">摹本发布</el-menu-item>
             </el-sub-menu>
             <el-menu-item index="/author/pot-msg">
               <el-icon>

@@ -3,8 +3,8 @@ import router from "../router";
 import {errorTips} from "../elehelper/message";
 
 const $http = axios.create({
-    baseURL: 'http://share.snapgenshin.com/PotCopy/api'
-    // baseURL: 'http://127.0.0.1:8085/PotCopy/api'
+    baseURL: 'https://share.snapgenshin.com/PotCopy/api'
+    // baseURL: 'https://localhost/PotCopy/api'
 })
 
 //请求拦截器

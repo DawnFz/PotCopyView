@@ -18,8 +18,9 @@
                 </el-icon>
                 <span>摹本管理</span>
               </template>
+              <el-menu-item index="/manager/info-edit">所有摹本</el-menu-item>
               <el-menu-item index="/manager/process">摹本审核</el-menu-item>
-              <el-menu-item index="/manager/info-edit">摹本修改</el-menu-item>
+              <el-menu-item index="/manager/report">举报管理</el-menu-item>
             </el-sub-menu>
             <el-sub-menu index="2">
               <template #title>

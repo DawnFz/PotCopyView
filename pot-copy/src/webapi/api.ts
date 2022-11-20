@@ -103,3 +103,21 @@ export const addCopyInfo = (data: any) => {
         errorMessage(err)
     })
 }
+
+// 举报一个摹本
+export const reportCopyInfo = (data: any) => {
+    return $http({
+        method: 'post',
+        url: '/Info/reportCopy',
+        data: data
+    }).then(res => {
+        let message: string = res.status.toString()
+        if (message === 'error') {
+            errorMessage(res)
+        } else {
+            successTips(res.data)
+        }
+    }).catch(err => {
+        errorMessage(err)
+    })
+}

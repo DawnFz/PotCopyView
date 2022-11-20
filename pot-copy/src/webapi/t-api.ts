@@ -63,6 +63,28 @@ export const getManagerCopyInfos = (data: any) => {
     })
 }
 
+// 获取摹本列表[管理员]
+export const allCopyInfos = (data: any) => {
+    return $http({
+        method: 'get',
+        url: 'Manager/allCopyInfos',
+        params: {
+            pageNum: data.pageNum,
+            pageSize: data.pageSize
+        }
+    }).then(res => {
+        let message: string = res.status.toString()
+        if (message === 'error') {
+            errorMessage(res)
+        } else {
+            return res.data
+        }
+    }).catch(err => {
+        errorMessage(err)
+        location.href = "/#/";
+    })
+}
+
 // 获取摹本列表[创作者]
 export const mySharedInfos = (data: any) => {
     return $http({
@@ -136,7 +158,9 @@ export const editCopyInfo = (data: any) => {
             errorMessage(res)
         } else {
             successTips(res.data)
-            location.href="/#/author/my-info"
+            setTimeout(() => {
+                location.reload();
+            }, 500)
         }
     }).catch(err => {
         errorMessage(err)
@@ -155,9 +179,92 @@ export const shareCopyInfoVerity = (data: any) => {
             errorMessage(res)
         } else {
             successTips(res.data)
-            location.href="/#/author/my-info"
+            location.href = "/#/author/my-info"
         }
     }).catch(err => {
         errorMessage(err)
+    })
+}
+
+// 删除我分享的摹本
+export const delCopyInfo = (copyId: string) => {
+    return $http({
+        method: 'delete',
+        url: '/Author/delCopyInfo',
+        params: {
+            copyId: copyId
+        }
+    }).then(res => {
+        let message: string = res.status.toString()
+        if (message === 'error') {
+            errorMessage(res)
+        } else {
+            successTips(res.data)
+            location.href = "/#/author/my-info"
+        }
+    }).catch(err => {
+        errorMessage(err)
+    })
+}
+
+// 删除我分享的摹本
+export const delReport = (copyId: string, tips: boolean) => {
+    return $http({
+        method: 'delete',
+        url: '/Manager/delReport',
+        params: {
+            copyId: copyId
+        }
+    }).then(res => {
+        let message: string = res.status.toString()
+        if (message === 'error') {
+            errorMessage(res)
+        } else {
+            if (tips) successTips(res.data)
+        }
+    }).catch(err => {
+        errorMessage(err)
+    })
+}
+
+// 管理员删除摹本
+export const managerDelCopyInfo = (copyId: string) => {
+    return $http({
+        method: 'delete',
+        url: '/Manager/delCopyInfo',
+        params: {
+            copyId: copyId
+        }
+    }).then(res => {
+        let message: string = res.status.toString()
+        if (message === 'error') {
+            errorMessage(res)
+        } else {
+            successTips(res.data)
+        }
+    }).catch(err => {
+        errorMessage(err)
+    })
+}
+
+// 查询举报信息
+export const getAllReports = (data: any) => {
+    return $http({
+        method: 'get',
+        url: '/Manager/getAllReports',
+        params: {
+            pageNum: data.pageNum,
+            pageSize: data.pageSize
+        }
+    }).then(res => {
+        let message: string = res.status.toString()
+        if (message === 'error') {
+            errorMessage(res)
+        } else {
+            return res.data
+        }
+    }).catch(err => {
+        errorMessage(err)
+        location.href = "/#/";
     })
 }

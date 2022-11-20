@@ -11,10 +11,12 @@ import AuthorView from '../views/AuthorView.vue'
 import InfoProcess from '../components/manager/InfoProcess.vue'
 import InfoEdit from '../components/manager/InfoEdit.vue'
 import PotType from '../components/manager/PotType.vue'
+import ReportPage from '../components/manager/ReportPage.vue'
 import PotBlock from '../components/manager/PotBlock.vue'
 import PotTag from '../components/manager/PotTag.vue'
 import PotNotify from '../components/manager/PotNotify.vue'
 import TypeBlock from '../components/manager/TypeBlock.vue'
+import NotifyPage from '../components/author/NotifyPage.vue'
 import MySharedInfo from '../components/author/MySharedInfo.vue'
 import ShareCopy from '../components/author/ShareCopy.vue'
 
@@ -89,17 +91,17 @@ const routes = [
         component: ManagerView,
         // 判断是否登录
         beforeEnter: loginCheck,
-        redirect: '/manager/process',
+        redirect: '/manager/info-edit',
         children: [
-            {
-                path: "process",
-                name: "process",
-                component: InfoProcess
-            },
             {
                 path: "info-edit",
                 name: "info-edit",
                 component: InfoEdit
+            },
+            {
+                path: "process",
+                name: "process",
+                component: InfoProcess
             },
             {
                 path: "add-type",
@@ -125,6 +127,11 @@ const routes = [
                 path: "notify",
                 name: "notify",
                 component: PotNotify
+            },
+            {
+                path: "report",
+                name: "report",
+                component: ReportPage
             }
         ]
     },
@@ -149,6 +156,11 @@ const routes = [
                     path: "info-share",
                     name: "info-share",
                     component: ShareCopy
+                },
+                {
+                    path: "pot-msg",
+                    name: "pot-msg",
+                    component: NotifyPage
                 }
             ]
     }

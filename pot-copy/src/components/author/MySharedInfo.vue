@@ -30,9 +30,9 @@
           <el-button size="default" style="color: white" color="#42b983"
                      @click="showEdit(scope.row)">编辑
           </el-button>
-          <el-button size="default" type="danger"
-                     @click="setInfoStatus(scope.row,1)">删除
-          </el-button>
+
+          <el-button @click="showDelete(scope.row.copyId)" type="danger">删除</el-button>
+
         </template>
       </el-table-column>
     </el-table>
@@ -74,17 +74,33 @@
       </el-dialog>
     </div>
 
+    <!-- 删除二次提醒 -->
+    <el-dialog
+        v-model="delVisible"
+        title="删除警告"
+        width="20%"
+        align-center>
+      <span>你确定要删除该摹本吗，该操作不可逆！</span>
+      <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="delVisible = false">取消</el-button>
+        <el-button type="danger" @click="delThisCopyInfo">确认删除</el-button>
+      </span>
+      </template>
+    </el-dialog>
+
   </div>
 </template>
 
 <script lang="ts" setup>
 import {reactive, ref} from "vue";
-import {mySharedInfos, updateCopyInfo} from "../../webapi/t-api";
+import {delCopyInfo, mySharedInfos, updateCopyInfo} from "../../webapi/t-api";
 import EditCopyInfo from "./EditCopyInfo.vue";
 import InfoView from "../../views/InfoView.vue";
 
 const dialogViewVisible = ref(false)
 const dialogEditVisible = ref(false)
+const delCopyId = ref();
 
 const meta: any = reactive({
   data: {},
@@ -95,6 +111,7 @@ const meta: any = reactive({
     total: 0
   }
 })
+const delVisible = ref(false)
 
 let tempData = reactive({})
 
@@ -119,6 +136,20 @@ const showInfo = (data: any) => {
 const showEdit = (data: any) => {
   editData = Object.assign({}, data)
   dialogEditVisible.value = true
+}
+
+const showDelete = (copyId: string) => {
+  delCopyId.value = copyId;
+  delVisible.value = true
+}
+
+const delThisCopyInfo = async () => {
+  await delCopyInfo(delCopyId.value)
+  delCopyId.value = ref();
+  delVisible.value = false;
+  setTimeout(() => {
+    location.reload()
+  }, 500)
 }
 
 const setInfoStatus = async (row: any, status: number) => {
